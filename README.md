@@ -1,6 +1,6 @@
 # soundcloud-api-client
 
-A TypeScript client for the SoundCloud API. Zero dependencies — uses native `fetch`.
+A TypeScript client for the SoundCloud API. Zero dependencies, uses native `fetch` (Node 18+).
 
 ## Install
 
@@ -8,65 +8,147 @@ A TypeScript client for the SoundCloud API. Zero dependencies — uses native `f
 npm install soundcloud-api-client
 ```
 
-## Usage
+## Quick Start
 
-### Client class
-
-```typescript
+```ts
 import { SoundCloudClient } from "soundcloud-api-client";
 
-const client = new SoundCloudClient({
-  clientId: "YOUR_CLIENT_ID",
-  clientSecret: "YOUR_CLIENT_SECRET",
-  redirectUri: "https://example.com/callback",
+const sc = new SoundCloudClient({
+  clientId: "your-client-id",
+  clientSecret: "your-client-secret",
+  redirectUri: "https://yourapp.com/callback",
 });
 
-// Get a client credentials token
-const token = await client.auth.getClientToken();
+// Get a client token
+const token = await sc.auth.getClientToken();
+
+// Search for tracks
+const results = await sc.search.tracks(token.access_token, "electronic");
+console.log(results.collection);
 
 // Get a user
-const user = await client.users.getUser(token.access_token, "12345");
+const user = await sc.users.getMe(token.access_token);
 
-// Search tracks
-const results = await client.search.tracks(token.access_token, "ambient");
+// Get a track and its comments
+const track = await sc.tracks.getTrack(token.access_token, 123456);
+const comments = await sc.tracks.getComments(token.access_token, 123456);
 ```
 
-### Standalone functions
+## Client Class
 
-Every method is also available as a standalone function:
+The `SoundCloudClient` class organizes all endpoints into namespaces:
 
-```typescript
-import { GetSCClientToken, GetSCMe, searchTracks } from "soundcloud-api-client";
+```ts
+const sc = new SoundCloudClient({ clientId, clientSecret, redirectUri });
 
-const token = await GetSCClientToken("CLIENT_ID", "CLIENT_SECRET");
-const me = await GetSCMe(token.access_token);
-const tracks = await searchTracks(token.access_token, "lofi");
+// Auth
+sc.auth.getClientToken()
+sc.auth.getUserToken(code)
+sc.auth.refreshUserToken(refreshToken)
+
+// Users
+sc.users.getMe(token)
+sc.users.getUser(token, userId)
+sc.users.getFollowers(token, userId, limit?)
+sc.users.getFollowings(token, userId, limit?)
+sc.users.getTracks(token, userId, limit?)
+sc.users.getPlaylists(token, userId, limit?)
+sc.users.getLikesTracks(token, userId, limit?, cursor?)
+sc.users.getLikesPlaylists(token, userId, limit?)
+
+// Tracks
+sc.tracks.getTrack(token, trackId)
+sc.tracks.getComments(token, trackId, limit?)
+sc.tracks.getLikes(token, trackId, limit?)
+sc.tracks.getReposts(token, trackId, limit?)
+sc.tracks.getRelated(token, trackId, limit?)
+sc.tracks.like(token, trackId)
+
+// Playlists
+sc.playlists.getPlaylist(token, playlistId)
+sc.playlists.getTracks(token, playlistId, limit?, offset?)
+sc.playlists.getReposts(token, playlistId, limit?)
+
+// Search
+sc.search.tracks(token, query, pageNumber?)
+sc.search.users(token, query, pageNumber?)
+sc.search.playlists(token, query, pageNumber?)
+
+// Resolve
+sc.resolve.resolveUrl(token, url)
+```
+
+## Standalone Functions
+
+Every endpoint is also available as a standalone function:
+
+```ts
+import { getMe, searchTracks, getClientToken } from "soundcloud-api-client";
+
+const token = await getClientToken("clientId", "clientSecret");
+const me = await getMe(token.access_token);
+const tracks = await searchTracks(token.access_token, "lo-fi");
 ```
 
 ## Types
 
-All SoundCloud API response types are exported:
+All response types match the SoundCloud API exactly:
 
-```typescript
+```ts
 import type {
   SoundCloudUser,
   SoundCloudTrack,
   SoundCloudPlaylist,
   SoundCloudComment,
   SoundCloudToken,
-  PaginatedResponse,
-} from "soundcloud-api-client";
+  SoundCloudPaginatedResponse,
+} from "soundcloud-api-client/types";
 ```
 
-## API Coverage
+## OAuth Flow
 
-- **Auth**: Client credentials, authorization code, refresh token
-- **Users**: Profile, followers, followings, tracks, playlists, likes
-- **Tracks**: Get, comments, likes, reposts, related, like
-- **Playlists**: Get, tracks, reposts
-- **Search**: Tracks, users, playlists
-- **Resolve**: URL resolution
-- **Utils**: Widget URL helper
+```ts
+const sc = new SoundCloudClient({
+  clientId: "...",
+  clientSecret: "...",
+  redirectUri: "https://yourapp.com/callback",
+});
+
+// 1. Redirect user to SoundCloud authorization page
+// 2. Exchange the code for a token
+const token = await sc.auth.getUserToken(code);
+
+// 3. Use the token
+const me = await sc.users.getMe(token.access_token);
+
+// 4. Refresh when expired
+const refreshed = await sc.auth.refreshUserToken(token.refresh_token);
+```
+
+## Pagination
+
+Paginated endpoints return `SoundCloudPaginatedResponse<T>`:
+
+```ts
+interface SoundCloudPaginatedResponse<T> {
+  collection: T[];
+  next_href: string; // URL for next page
+}
+```
+
+## Utilities
+
+```ts
+import { getSoundCloudWidgetUrl } from "soundcloud-api-client";
+
+// Generate a SoundCloud embed widget URL
+const widgetUrl = getSoundCloudWidgetUrl(trackId);
+```
+
+## Requirements
+
+- Node.js 18+ (uses native `fetch`)
+- SoundCloud API credentials
 
 ## License
 

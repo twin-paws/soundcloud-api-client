@@ -1,44 +1,55 @@
 // Client
 export { SoundCloudClient } from "./client/SoundCloudClient.js";
 export type { SoundCloudClientConfig } from "./client/SoundCloudClient.js";
+export { scFetch } from "./client/http.js";
+export type { RequestOptions } from "./client/http.js";
 
 // Types
-export * from "./types/index.js";
+export type {
+  SoundCloudToken,
+  SoundCloudUser,
+  SoundCloudSubscription,
+  SoundCloudSubscriptionProduct,
+  SoundCloudTrack,
+  SoundCloudPlaylist,
+  SoundCloudComment,
+  SoundCloudPaginatedResponse,
+} from "./types/api.js";
 
-// Standalone functions — Auth
-export { GetSCClientToken } from "./auth/index.js";
-export { GetSCUserToken } from "./auth/index.js";
-export { RefreshSCUserToken } from "./auth/index.js";
+// Auth
+export { getClientToken } from "./auth/index.js";
+export { getUserToken } from "./auth/index.js";
+export { refreshUserToken } from "./auth/index.js";
 
-// Standalone functions — Users
-export { GetSCMe } from "./users/index.js";
-export { GetSCUserWithId } from "./users/index.js";
-export { GetSCUserFollowers } from "./users/index.js";
-export { GetSCUserFollowings } from "./users/index.js";
-export { GetSCUserTracks } from "./users/index.js";
-export { GetSCUserPlaylists } from "./users/index.js";
-export { GetSCUserLikesTracks } from "./users/index.js";
-export { GetSCUserLikesPlaylists } from "./users/index.js";
+// Users
+export { getMe } from "./users/index.js";
+export { getUser } from "./users/index.js";
+export { getFollowers } from "./users/index.js";
+export { getFollowings } from "./users/index.js";
+export { getUserTracks } from "./users/index.js";
+export { getUserPlaylists } from "./users/index.js";
+export { getUserLikesTracks } from "./users/index.js";
+export { getUserLikesPlaylists } from "./users/index.js";
 
-// Standalone functions — Tracks
-export { GetSCTrackWithId } from "./tracks/index.js";
-export { GetSCTrackComments } from "./tracks/index.js";
-export { GetSCTrackLikes } from "./tracks/index.js";
+// Tracks
+export { getTrack } from "./tracks/index.js";
+export { getTrackComments } from "./tracks/index.js";
+export { getTrackLikes } from "./tracks/index.js";
 export { getTrackReposts } from "./tracks/index.js";
 export { getRelatedTracks } from "./tracks/index.js";
 export { likeTrack } from "./tracks/index.js";
 
-// Standalone functions — Playlists
+// Playlists
 export { getPlaylist } from "./playlists/index.js";
 export { getPlaylistTracks } from "./playlists/index.js";
 export { getPlaylistReposts } from "./playlists/index.js";
 
-// Standalone functions — Search
+// Search
 export { searchTracks } from "./search/index.js";
 export { searchUsers } from "./search/index.js";
 export { searchPlaylists } from "./search/index.js";
 
-// Standalone functions — Resolve
+// Resolve
 export { resolveUrl } from "./resolve/index.js";
 
 // Utils

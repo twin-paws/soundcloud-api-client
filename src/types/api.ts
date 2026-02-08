@@ -148,7 +148,7 @@ export interface SoundCloudComment {
 }
 
 /** Cursor-paginated response from SoundCloud */
-export interface PaginatedResponse<T> {
+export interface SoundCloudPaginatedResponse<T> {
   collection: T[];
   next_href: string;
 }

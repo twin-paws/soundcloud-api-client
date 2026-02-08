@@ -1,3 +1,3 @@
-export { GetSCClientToken } from "./getClientToken.js";
-export { GetSCUserToken } from "./getUserToken.js";
-export { RefreshSCUserToken } from "./refreshUserToken.js";
+export { getClientToken } from "./getClientToken.js";
+export { getUserToken } from "./getUserToken.js";
+export { refreshUserToken } from "./refreshUserToken.js";

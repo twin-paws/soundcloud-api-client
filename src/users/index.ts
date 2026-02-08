@@ -1,8 +1,8 @@
-export { GetSCMe } from "./getMe.js";
-export { GetSCUserWithId } from "./getUser.js";
-export { GetSCUserFollowers } from "./getFollowers.js";
-export { GetSCUserFollowings } from "./getFollowings.js";
-export { GetSCUserTracks } from "./getTracks.js";
-export { GetSCUserPlaylists } from "./getPlaylists.js";
-export { GetSCUserLikesTracks } from "./getLikesTracks.js";
-export { GetSCUserLikesPlaylists } from "./getLikesPlaylists.js";
+export { getMe } from "./getMe.js";
+export { getUser } from "./getUser.js";
+export { getFollowers } from "./getFollowers.js";
+export { getFollowings } from "./getFollowings.js";
+export { getUserTracks } from "./getTracks.js";
+export { getUserPlaylists } from "./getPlaylists.js";
+export { getUserLikesTracks } from "./getLikesTracks.js";
+export { getUserLikesPlaylists } from "./getLikesPlaylists.js";
