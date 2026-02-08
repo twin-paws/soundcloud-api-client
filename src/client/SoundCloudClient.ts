@@ -1,22 +1,12 @@
-import { scFetch, scFetchAndMap } from "./http.js";
-import { SCTokenToTSDToken } from "../mappers/token.js";
-import {
-  SCApiTrackToTSDTrack,
-  SCApiTrackArrayToTSDTrackArray,
-  SCApiTrackArrayToTSDTrackArrayCursor,
-} from "../mappers/track.js";
-import {
-  SCApiUserToTSDUser,
-  SCApiUserArrayToTSDUserArrayCursor,
-} from "../mappers/user.js";
-import { SCApiCommentArrayToTSDCommentArrayCursor } from "../mappers/comment.js";
-import {
-  SCApiPlaylistToTSDPlaylist,
-  SCApiPlaylistArrayToTSDPlaylistArrayCursor,
-} from "../mappers/playlist.js";
-
-import type { SCApiClientToken, SCApiTrack, SCApiUser, SCApiPlaylist, SCApiComment, CursorResponse } from "../types/api.js";
-import type { Token, SCUser, SCUserBase, Track, Playlist, PlaylistBase, SCComment, CursorResult } from "../types/models.js";
+import { scFetch } from "./http.js";
+import type {
+  SoundCloudToken,
+  SoundCloudUser,
+  SoundCloudTrack,
+  SoundCloudPlaylist,
+  SoundCloudComment,
+  PaginatedResponse,
+} from "../types/api.js";
 
 export interface SoundCloudClientConfig {
   clientId: string;
@@ -50,188 +40,123 @@ export namespace SoundCloudClient {
   export class Auth {
     constructor(private config: SoundCloudClientConfig) {}
 
-    /** POST /oauth2/token (client_credentials) */
-    async getClientToken(): Promise<Token> {
-      return scFetchAndMap<Token, SCApiClientToken>(
-        {
-          path: `/oauth2/token?client_id=${this.config.clientId}&client_secret=${this.config.clientSecret}&grant_type=client_credentials`,
-          method: "POST",
-        },
-        SCTokenToTSDToken
-      );
+    async getClientToken(): Promise<SoundCloudToken> {
+      return scFetch<SoundCloudToken>({
+        path: `/oauth2/token?client_id=${this.config.clientId}&client_secret=${this.config.clientSecret}&grant_type=client_credentials`,
+        method: "POST",
+      });
     }
 
-    /** POST /oauth2/token (authorization_code) */
-    async getUserToken(code: string): Promise<Token> {
-      return scFetchAndMap<Token, SCApiClientToken>(
-        {
-          path: `/oauth2/token?grant_type=authorization_code&client_id=${this.config.clientId}&client_secret=${this.config.clientSecret}&redirect_uri=${this.config.redirectUri}&code=${code}`,
-          method: "POST",
-        },
-        SCTokenToTSDToken
-      );
+    async getUserToken(code: string): Promise<SoundCloudToken> {
+      return scFetch<SoundCloudToken>({
+        path: `/oauth2/token?grant_type=authorization_code&client_id=${this.config.clientId}&client_secret=${this.config.clientSecret}&redirect_uri=${this.config.redirectUri}&code=${code}`,
+        method: "POST",
+      });
     }
 
-    /** POST /oauth2/token (refresh_token) */
-    async refreshUserToken(refreshToken: string): Promise<Token> {
-      return scFetchAndMap<Token, SCApiClientToken>(
-        {
-          path: `/oauth2/token?grant_type=refresh_token&client_id=${this.config.clientId}&client_secret=${this.config.clientSecret}&redirect_uri=${this.config.redirectUri}&refresh_token=${refreshToken}`,
-          method: "POST",
-        },
-        SCTokenToTSDToken
-      );
+    async refreshUserToken(refreshToken: string): Promise<SoundCloudToken> {
+      return scFetch<SoundCloudToken>({
+        path: `/oauth2/token?grant_type=refresh_token&client_id=${this.config.clientId}&client_secret=${this.config.clientSecret}&redirect_uri=${this.config.redirectUri}&refresh_token=${refreshToken}`,
+        method: "POST",
+      });
     }
   }
 
   export class Users {
-    /** GET /me */
-    async getMe(token: string): Promise<SCUser> {
-      return scFetchAndMap<SCUser, SCApiUser>(
-        { path: `/me`, method: "GET", token },
-        SCApiUserToTSDUser
-      );
+    async getMe(token: string): Promise<SoundCloudUser> {
+      return scFetch<SoundCloudUser>({ path: `/me`, method: "GET", token });
     }
 
-    /** GET /users/:id */
-    async getUser(token: string, userId: string): Promise<SCUser> {
-      return scFetchAndMap<SCUser, SCApiUser>(
-        { path: `/users/${userId}`, method: "GET", token },
-        SCApiUserToTSDUser
-      );
+    async getUser(token: string, userId: string): Promise<SoundCloudUser> {
+      return scFetch<SoundCloudUser>({ path: `/users/${userId}`, method: "GET", token });
     }
 
-    /** GET /users/:id/followers */
-    async getFollowers(token: string, userId: string, limit?: number): Promise<CursorResult<SCUserBase>> {
-      return scFetchAndMap<CursorResult<SCUserBase>, CursorResponse<SCApiUser>>(
-        {
-          path: `/users/${userId}/followers?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiUserArrayToTSDUserArrayCursor
-      );
+    async getFollowers(token: string, userId: string, limit?: number): Promise<PaginatedResponse<SoundCloudUser>> {
+      return scFetch<PaginatedResponse<SoundCloudUser>>({
+        path: `/users/${userId}/followers?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /users/:id/followings */
-    async getFollowings(token: string, userId: string, limit?: number): Promise<CursorResult<SCUserBase>> {
-      return scFetchAndMap<CursorResult<SCUserBase>, CursorResponse<SCApiUser>>(
-        {
-          path: `/users/${userId}/followings?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiUserArrayToTSDUserArrayCursor
-      );
+    async getFollowings(token: string, userId: string, limit?: number): Promise<PaginatedResponse<SoundCloudUser>> {
+      return scFetch<PaginatedResponse<SoundCloudUser>>({
+        path: `/users/${userId}/followings?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /users/:id/tracks */
-    async getTracks(token: string, userId: string, limit?: number): Promise<CursorResult<Track>> {
-      return scFetchAndMap<CursorResult<Track>, CursorResponse<SCApiTrack>>(
-        {
-          path: `/users/${userId}/tracks?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiTrackArrayToTSDTrackArrayCursor
-      );
+    async getTracks(token: string, userId: string, limit?: number): Promise<PaginatedResponse<SoundCloudTrack>> {
+      return scFetch<PaginatedResponse<SoundCloudTrack>>({
+        path: `/users/${userId}/tracks?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /users/:id/playlists */
-    async getPlaylists(token: string, userId: string, limit?: number): Promise<CursorResult<PlaylistBase>> {
-      return scFetchAndMap<CursorResult<PlaylistBase>, CursorResponse<SCApiPlaylist>>(
-        {
-          path: `/users/${userId}/playlists?${limit ? `limit=${limit}&` : ""}linked_partitioning=true&show_tracks=false`,
-          method: "GET",
-          token,
-        },
-        SCApiPlaylistArrayToTSDPlaylistArrayCursor
-      );
+    async getPlaylists(token: string, userId: string, limit?: number): Promise<PaginatedResponse<SoundCloudPlaylist>> {
+      return scFetch<PaginatedResponse<SoundCloudPlaylist>>({
+        path: `/users/${userId}/playlists?${limit ? `limit=${limit}&` : ""}linked_partitioning=true&show_tracks=false`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /users/:id/likes/tracks */
-    async getLikesTracks(token: string, userId: string, limit?: number, cursor?: string): Promise<CursorResult<Track>> {
-      return scFetchAndMap<CursorResult<Track>, CursorResponse<SCApiTrack>>(
-        {
-          path: `/users/${userId}/likes/tracks?${limit ? `limit=${limit}&` : ""}${cursor ? `cursor=${cursor}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiTrackArrayToTSDTrackArrayCursor
-      );
+    async getLikesTracks(token: string, userId: string, limit?: number, cursor?: string): Promise<PaginatedResponse<SoundCloudTrack>> {
+      return scFetch<PaginatedResponse<SoundCloudTrack>>({
+        path: `/users/${userId}/likes/tracks?${limit ? `limit=${limit}&` : ""}${cursor ? `cursor=${cursor}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /users/:id/likes/playlists */
-    async getLikesPlaylists(token: string, userId: string, limit?: number): Promise<CursorResult<PlaylistBase>> {
-      return scFetchAndMap<CursorResult<PlaylistBase>, CursorResponse<SCApiPlaylist>>(
-        {
-          path: `/users/${userId}/likes/playlists?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiPlaylistArrayToTSDPlaylistArrayCursor
-      );
+    async getLikesPlaylists(token: string, userId: string, limit?: number): Promise<PaginatedResponse<SoundCloudPlaylist>> {
+      return scFetch<PaginatedResponse<SoundCloudPlaylist>>({
+        path: `/users/${userId}/likes/playlists?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
   }
 
   export class Tracks {
-    /** GET /tracks/:id */
-    async getTrack(token: string, trackId: string): Promise<Track> {
-      return scFetchAndMap<Track, SCApiTrack>(
-        { path: `/tracks/${trackId}`, method: "GET", token },
-        SCApiTrackToTSDTrack
-      );
+    async getTrack(token: string, trackId: string): Promise<SoundCloudTrack> {
+      return scFetch<SoundCloudTrack>({ path: `/tracks/${trackId}`, method: "GET", token });
     }
 
-    /** GET /tracks/:id/comments */
-    async getComments(token: string, trackId: string, limit?: number): Promise<CursorResult<SCComment>> {
-      return scFetchAndMap<CursorResult<SCComment>, CursorResponse<SCApiComment>>(
-        {
-          path: `/tracks/${trackId}/comments?threaded=1&filter_replies=0${limit ? `&limit=${limit}` : ""}&linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiCommentArrayToTSDCommentArrayCursor
-      );
+    async getComments(token: string, trackId: string, limit?: number): Promise<PaginatedResponse<SoundCloudComment>> {
+      return scFetch<PaginatedResponse<SoundCloudComment>>({
+        path: `/tracks/${trackId}/comments?threaded=1&filter_replies=0${limit ? `&limit=${limit}` : ""}&linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /tracks/:id/favoriters */
-    async getLikes(token: string, trackId: string, limit?: number): Promise<CursorResult<SCUser>> {
-      return scFetchAndMap<CursorResult<SCUser>, CursorResponse<SCApiUser>>(
-        {
-          path: `/tracks/${trackId}/favoriters?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiUserArrayToTSDUserArrayCursor
-      );
+    async getLikes(token: string, trackId: string, limit?: number): Promise<PaginatedResponse<SoundCloudUser>> {
+      return scFetch<PaginatedResponse<SoundCloudUser>>({
+        path: `/tracks/${trackId}/favoriters?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /tracks/:id/reposters */
-    async getReposts(token: string, trackId: string, limit?: number): Promise<CursorResult<SCUserBase>> {
-      return scFetchAndMap<CursorResult<SCUserBase>, CursorResponse<SCApiUser>>(
-        {
-          path: `/tracks/${trackId}/reposters?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiUserArrayToTSDUserArrayCursor
-      );
+    async getReposts(token: string, trackId: string, limit?: number): Promise<PaginatedResponse<SoundCloudUser>> {
+      return scFetch<PaginatedResponse<SoundCloudUser>>({
+        path: `/tracks/${trackId}/reposters?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /tracks/:id/related */
-    async getRelated(token: string, trackId: string, limit?: number): Promise<Track[]> {
-      return scFetchAndMap<Track[], SCApiTrack[]>(
-        {
-          path: `/tracks/${trackId}/related${limit ? `?limit=${limit}` : ""}`,
-          method: "GET",
-          token,
-        },
-        SCApiTrackArrayToTSDTrackArray
-      );
+    async getRelated(token: string, trackId: string, limit?: number): Promise<SoundCloudTrack[]> {
+      return scFetch<SoundCloudTrack[]>({
+        path: `/tracks/${trackId}/related${limit ? `?limit=${limit}` : ""}`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** POST /likes/tracks/:id */
     async like(token: string, trackId: string): Promise<boolean> {
       try {
         await scFetch<unknown>({
@@ -247,79 +172,54 @@ export namespace SoundCloudClient {
   }
 
   export class Playlists {
-    /** GET /playlists/:id */
-    async getPlaylist(token: string, playlistId: string): Promise<Playlist> {
-      return scFetchAndMap<Playlist, SCApiPlaylist>(
-        { path: `/playlists/${playlistId}`, method: "GET", token },
-        SCApiPlaylistToTSDPlaylist
-      );
+    async getPlaylist(token: string, playlistId: string): Promise<SoundCloudPlaylist> {
+      return scFetch<SoundCloudPlaylist>({ path: `/playlists/${playlistId}`, method: "GET", token });
     }
 
-    /** GET /playlists/:id/tracks */
-    async getTracks(token: string, playlistId: string, limit?: number, offset?: number): Promise<CursorResult<Track>> {
-      return scFetchAndMap<CursorResult<Track>, CursorResponse<SCApiTrack>>(
-        {
-          path: `/playlists/${playlistId}/tracks?${limit ? `limit=${limit}&` : ""}linked_partitioning=true${offset ? `&offset=${offset}` : ""}`,
-          method: "GET",
-          token,
-        },
-        SCApiTrackArrayToTSDTrackArrayCursor
-      );
+    async getTracks(token: string, playlistId: string, limit?: number, offset?: number): Promise<PaginatedResponse<SoundCloudTrack>> {
+      return scFetch<PaginatedResponse<SoundCloudTrack>>({
+        path: `/playlists/${playlistId}/tracks?${limit ? `limit=${limit}&` : ""}linked_partitioning=true${offset ? `&offset=${offset}` : ""}`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /playlists/:id/reposters */
-    async getReposts(token: string, playlistId: string, limit?: number): Promise<CursorResult<SCUserBase>> {
-      return scFetchAndMap<CursorResult<SCUserBase>, CursorResponse<SCApiUser>>(
-        {
-          path: `/playlists/${playlistId}/reposters?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-          method: "GET",
-          token,
-        },
-        SCApiUserArrayToTSDUserArrayCursor
-      );
+    async getReposts(token: string, playlistId: string, limit?: number): Promise<PaginatedResponse<SoundCloudUser>> {
+      return scFetch<PaginatedResponse<SoundCloudUser>>({
+        path: `/playlists/${playlistId}/reposters?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+        method: "GET",
+        token,
+      });
     }
   }
 
   export class Search {
-    /** GET /tracks?q= */
-    async tracks(token: string, text: string, pageNumber?: number): Promise<CursorResult<Track>> {
-      return scFetchAndMap<CursorResult<Track>, CursorResponse<SCApiTrack>>(
-        {
-          path: `/tracks?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
-          method: "GET",
-          token,
-        },
-        SCApiTrackArrayToTSDTrackArrayCursor
-      );
+    async tracks(token: string, text: string, pageNumber?: number): Promise<PaginatedResponse<SoundCloudTrack>> {
+      return scFetch<PaginatedResponse<SoundCloudTrack>>({
+        path: `/tracks?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /users?q= */
-    async users(token: string, text: string, pageNumber?: number): Promise<CursorResult<SCUserBase>> {
-      return scFetchAndMap<CursorResult<SCUserBase>, CursorResponse<SCApiUser>>(
-        {
-          path: `/users?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
-          method: "GET",
-          token,
-        },
-        SCApiUserArrayToTSDUserArrayCursor
-      );
+    async users(token: string, text: string, pageNumber?: number): Promise<PaginatedResponse<SoundCloudUser>> {
+      return scFetch<PaginatedResponse<SoundCloudUser>>({
+        path: `/users?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
+        method: "GET",
+        token,
+      });
     }
 
-    /** GET /playlists?q= */
-    async playlists(token: string, text: string, pageNumber?: number): Promise<CursorResult<PlaylistBase>> {
-      return scFetchAndMap<CursorResult<PlaylistBase>, CursorResponse<SCApiPlaylist>>(
-        {
-          path: `/playlists?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
-          method: "GET",
-          token,
-        },
-        SCApiPlaylistArrayToTSDPlaylistArrayCursor
-      );
+    async playlists(token: string, text: string, pageNumber?: number): Promise<PaginatedResponse<SoundCloudPlaylist>> {
+      return scFetch<PaginatedResponse<SoundCloudPlaylist>>({
+        path: `/playlists?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
+        method: "GET",
+        token,
+      });
     }
   }
 
   export class Resolve {
-    /** GET /resolve?url= */
     async resolveUrl(token: string, url: string): Promise<string> {
       return scFetch<string>({
         path: `/resolve?url=${url}`,

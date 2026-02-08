@@ -1,8 +1,8 @@
 import { scFetch } from "../client/http.js";
 
-export const LikeSCTrack = async (
+export const likeTrack = async (
   token: string,
-  trackId: string
+  trackId: string | number
 ): Promise<boolean> => {
   try {
     await scFetch<unknown>({

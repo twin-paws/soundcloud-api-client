@@ -1,19 +1,14 @@
-import { scFetchAndMap } from "../client/http.js";
-import { SCApiUserArrayToTSDUserArrayCursor } from "../mappers/user.js";
-import type { SCApiUser, CursorResponse } from "../types/api.js";
-import type { SCUserBase, CursorResult } from "../types/models.js";
+import { scFetch } from "../client/http.js";
+import type { SoundCloudUser, PaginatedResponse } from "../types/api.js";
 
 export const GetSCUserFollowings = (
   token: string,
   userId: string,
   limit?: number
-): Promise<CursorResult<SCUserBase>> => {
-  return scFetchAndMap<CursorResult<SCUserBase>, CursorResponse<SCApiUser>>(
-    {
-      path: `/users/${userId}/followings?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
-      method: "GET",
-      token,
-    },
-    SCApiUserArrayToTSDUserArrayCursor
-  );
+): Promise<PaginatedResponse<SoundCloudUser>> => {
+  return scFetch<PaginatedResponse<SoundCloudUser>>({
+    path: `/users/${userId}/followings?${limit ? `limit=${limit}&` : ""}linked_partitioning=true`,
+    method: "GET",
+    token,
+  });
 };

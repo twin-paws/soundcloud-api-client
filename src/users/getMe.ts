@@ -1,11 +1,6 @@
-import { scFetchAndMap } from "../client/http.js";
-import { SCApiUserToTSDUser } from "../mappers/user.js";
-import type { SCApiUser } from "../types/api.js";
-import type { SCUser } from "../types/models.js";
+import { scFetch } from "../client/http.js";
+import type { SoundCloudUser } from "../types/api.js";
 
-export const GetSCMe = (token: string): Promise<SCUser> => {
-  return scFetchAndMap<SCUser, SCApiUser>(
-    { path: `/me`, method: "GET", token },
-    SCApiUserToTSDUser
-  );
+export const GetSCMe = (token: string): Promise<SoundCloudUser> => {
+  return scFetch<SoundCloudUser>({ path: `/me`, method: "GET", token });
 };

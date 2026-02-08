@@ -41,14 +41,3 @@ export async function scFetch<T>(options: RequestOptions): Promise<T> {
 
   return response.json() as Promise<T>;
 }
-
-/**
- * Make a request and map the response through a converter function.
- */
-export async function scFetchAndMap<T, V>(
-  options: RequestOptions,
-  convert: (from: V) => T
-): Promise<T> {
-  const raw = await scFetch<V>(options);
-  return convert(raw);
-}

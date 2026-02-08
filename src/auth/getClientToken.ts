@@ -1,17 +1,12 @@
-import { scFetchAndMap } from "../client/http.js";
-import { SCTokenToTSDToken } from "../mappers/token.js";
-import type { SCApiClientToken } from "../types/api.js";
-import type { Token } from "../types/models.js";
+import { scFetch } from "../client/http.js";
+import type { SoundCloudToken } from "../types/api.js";
 
 export const GetSCClientToken = (
   clientId: string,
   clientSecret: string
-): Promise<Token> => {
-  return scFetchAndMap<Token, SCApiClientToken>(
-    {
-      path: `/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
-      method: "POST",
-    },
-    SCTokenToTSDToken
-  );
+): Promise<SoundCloudToken> => {
+  return scFetch<SoundCloudToken>({
+    path: `/oauth2/token?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
+    method: "POST",
+  });
 };

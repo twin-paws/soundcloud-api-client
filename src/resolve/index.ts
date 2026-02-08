@@ -1,1 +1,1 @@
-export { ResolveSCUrl } from "./resolveUrl.js";
+export { resolveUrl } from "./resolveUrl.js";

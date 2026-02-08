@@ -1,8 +1,8 @@
 import { scFetch } from "../client/http.js";
 
-export const ResolveSCUrl = (token: string, url: string): Promise<string> => {
+export const resolveUrl = (token: string, url: string): Promise<string> => {
   return scFetch<string>({
-    path: `/resolve?url=${url}`,
+    path: `/resolve?url=${encodeURIComponent(url)}`,
     method: "GET",
     token,
   });

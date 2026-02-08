@@ -1,7 +1,7 @@
 {
-  "name": "@tsd/soundcloud",
+  "name": "soundcloud-api-client",
   "version": "1.0.0",
-  "description": "SoundCloud API client for TSD",
+  "description": "A TypeScript client for the SoundCloud API",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,11 +15,6 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.js",
       "require": "./dist/types/index.cjs"
-    },
-    "./mappers": {
-      "types": "./dist/mappers/index.d.ts",
-      "import": "./dist/mappers/index.js",
-      "require": "./dist/mappers/index.cjs"
     }
   },
   "files": ["dist"],
@@ -30,11 +25,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/twin-paws/tsd-soundcloud.git"
+    "url": "https://github.com/twin-paws/soundcloud-api-client.git"
   },
-  "publishConfig": {
-    "@tsd:registry": "https://npm.pkg.github.com"
-  },
+  "keywords": ["soundcloud", "api", "client", "typescript", "oauth2"],
   "license": "MIT",
   "engines": {
     "node": ">=18"

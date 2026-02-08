@@ -1,19 +1,14 @@
-import { scFetchAndMap } from "../client/http.js";
-import { SCApiTrackArrayToTSDTrackArrayCursor } from "../mappers/track.js";
-import type { SCApiTrack, CursorResponse } from "../types/api.js";
-import type { Track, CursorResult } from "../types/models.js";
+import { scFetch } from "../client/http.js";
+import type { SoundCloudTrack, PaginatedResponse } from "../types/api.js";
 
-export const SearchTracks = (
+export const searchTracks = (
   token: string,
-  text: string,
+  query: string,
   pageNumber?: number
-): Promise<CursorResult<Track>> => {
-  return scFetchAndMap<CursorResult<Track>, CursorResponse<SCApiTrack>>(
-    {
-      path: `/tracks?q=${text}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
-      method: "GET",
-      token,
-    },
-    SCApiTrackArrayToTSDTrackArrayCursor
-  );
+): Promise<PaginatedResponse<SoundCloudTrack>> => {
+  return scFetch({
+    path: `/tracks?q=${encodeURIComponent(query)}&linked_partitioning=true&limit=10${pageNumber && pageNumber > 0 ? `&offset=${10 * pageNumber}` : ""}`,
+    method: "GET",
+    token,
+  });
 };

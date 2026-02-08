@@ -1,6 +1,5 @@
-// Raw SoundCloud API response types
-
-export interface SCApiClientToken {
+/** OAuth token response from SoundCloud */
+export interface SoundCloudToken {
   access_token: string;
   expires_in: number;
   refresh_token: string;
@@ -8,7 +7,8 @@ export interface SCApiClientToken {
   token_type: string;
 }
 
-export interface SCApiUser {
+/** SoundCloud user profile */
+export interface SoundCloudUser {
   avatar_url: string;
   id: number;
   kind: string;
@@ -30,27 +30,28 @@ export interface SCApiUser {
   followers_count: number;
   followings_count: number;
   plan: string;
-  myspace_name: null;
-  discogs_name: null;
-  website_title: null;
-  website: null;
+  myspace_name: string | null;
+  discogs_name: string | null;
+  website_title: string | null;
+  website: string | null;
   comments_count: number;
   online: boolean;
   likes_count: number;
   playlist_count: number;
-  subscriptions: SCApiUserSubscription[];
+  subscriptions: SoundCloudSubscription[];
 }
 
-export interface SCApiUserSubscription {
-  product: SCApiUserSubscriptionProduct;
+export interface SoundCloudSubscription {
+  product: SoundCloudSubscriptionProduct;
 }
 
-export interface SCApiUserSubscriptionProduct {
+export interface SoundCloudSubscriptionProduct {
   id: string;
   name: string;
 }
 
-export interface SCApiTrack {
+/** SoundCloud track */
+export interface SoundCloudTrack {
   kind: string;
   id: number;
   created_at: string;
@@ -63,40 +64,41 @@ export interface SCApiTrack {
   embeddable_by: string;
   purchase_url: string;
   purchase_title: string;
-  getre: string;
+  genre: string;
   title: string;
   description: string;
   label_name: string;
-  release: null;
-  key_signature: null;
-  isrc: null;
+  release: string | null;
+  key_signature: string | null;
+  isrc: string | null;
   bpm: number;
   release_year: number;
   release_month: number;
   release_day: number;
   license: string;
   uri: string;
-  user: SCApiUser;
+  user: SoundCloudUser;
   permalink_url: string;
   artwork_url: string;
   stream_url: string;
   download_url: string;
   waveform_url: string;
-  available_country_codes: null;
-  secret_uri: null;
+  available_country_codes: string[] | null;
+  secret_uri: string | null;
   user_favorite: boolean;
-  user_playback_count: null;
+  user_playback_count: number | null;
   playback_count: number;
   download_count: number;
   favoritings_count: number;
   reposts_count: number;
   downloadable: boolean;
   access: string;
-  policy: null;
-  monetization_model: null;
+  policy: string | null;
+  monetization_model: string | null;
 }
 
-export interface SCApiPlaylist {
+/** SoundCloud playlist / set */
+export interface SoundCloudPlaylist {
   duration: number;
   genre: string;
   release_day: string;
@@ -114,7 +116,7 @@ export interface SCApiPlaylist {
   user_id: number;
   last_modified: string;
   license: string;
-  user: SCApiUser;
+  user: SoundCloudUser;
   playlist_type: string;
   type: string;
   id: number;
@@ -135,7 +137,8 @@ export interface SCApiPlaylist {
   tracks_uri: string;
 }
 
-export interface SCApiComment {
+/** SoundCloud comment */
+export interface SoundCloudComment {
   id: string;
   user_id: string;
   track_id: string;
@@ -144,7 +147,8 @@ export interface SCApiComment {
   timestamp: string;
 }
 
-export interface CursorResponse<T> {
+/** Cursor-paginated response from SoundCloud */
+export interface PaginatedResponse<T> {
   collection: T[];
   next_href: string;
 }

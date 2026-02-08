@@ -1,19 +1,14 @@
-import { scFetchAndMap } from "../client/http.js";
-import { SCApiTrackArrayToTSDTrackArray } from "../mappers/track.js";
-import type { SCApiTrack } from "../types/api.js";
-import type { Track } from "../types/models.js";
+import { scFetch } from "../client/http.js";
+import type { SoundCloudTrack } from "../types/api.js";
 
-export const GetSCTrackRelated = (
+export const getRelatedTracks = (
   token: string,
-  trackId: string,
+  trackId: string | number,
   limit?: number
-): Promise<Track[]> => {
-  return scFetchAndMap<Track[], SCApiTrack[]>(
-    {
-      path: `/tracks/${trackId}/related${limit ? `?limit=${limit}` : ""}`,
-      method: "GET",
-      token,
-    },
-    SCApiTrackArrayToTSDTrackArray
-  );
+): Promise<SoundCloudTrack[]> => {
+  return scFetch<SoundCloudTrack[]>({
+    path: `/tracks/${trackId}/related${limit ? `?limit=${limit}` : ""}`,
+    method: "GET",
+    token,
+  });
 };

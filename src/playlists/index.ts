@@ -1,3 +1,3 @@
-export { GetSCPlaylistWithId } from "./getPlaylist.js";
-export { GetSCPlaylistTracks } from "./getTracks.js";
-export { GetSCPlaylistReposts } from "./getReposts.js";
+export { getPlaylist } from "./getPlaylist.js";
+export { getPlaylistTracks } from "./getTracks.js";
+export { getPlaylistReposts } from "./getReposts.js";

@@ -1,3 +1,3 @@
-export { SearchTracks } from "./searchTracks.js";
-export { SearchUsers } from "./searchUsers.js";
-export { SearchPlaylists } from "./searchPlaylists.js";
+export { searchTracks } from "./searchTracks.js";
+export { searchUsers } from "./searchUsers.js";
+export { searchPlaylists } from "./searchPlaylists.js";

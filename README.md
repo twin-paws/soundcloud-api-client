@@ -1,92 +1,72 @@
-# @tsd/soundcloud
+# soundcloud-api-client
 
-TypeScript SoundCloud API client extracted from the TSD monorepo. Uses native `fetch` (Node 18+), zero dependencies.
+A TypeScript client for the SoundCloud API. Zero dependencies — uses native `fetch`.
 
 ## Install
 
 ```bash
-npm install @tsd/soundcloud
+npm install soundcloud-api-client
 ```
 
 ## Usage
 
-### Client class (recommended)
+### Client class
 
-```ts
-import { SoundCloudClient } from "@tsd/soundcloud";
+```typescript
+import { SoundCloudClient } from "soundcloud-api-client";
 
-const sc = new SoundCloudClient({
-  clientId: "your-client-id",
-  clientSecret: "your-client-secret",
-  redirectUri: "https://yourapp.com/callback",
+const client = new SoundCloudClient({
+  clientId: "YOUR_CLIENT_ID",
+  clientSecret: "YOUR_CLIENT_SECRET",
+  redirectUri: "https://example.com/callback",
 });
 
-// Auth
-const token = await sc.auth.getClientToken();
-const userToken = await sc.auth.getUserToken(authCode);
+// Get a client credentials token
+const token = await client.auth.getClientToken();
 
-// Users
-const me = await sc.users.getMe(token.accessToken);
-const user = await sc.users.getUser(token.accessToken, "12345");
-const followers = await sc.users.getFollowers(token.accessToken, "12345", 50);
-const tracks = await sc.users.getTracks(token.accessToken, "12345");
+// Get a user
+const user = await client.users.getUser(token.access_token, "12345");
 
-// Tracks
-const track = await sc.tracks.getTrack(token.accessToken, "67890");
-const comments = await sc.tracks.getComments(token.accessToken, "67890");
-const liked = await sc.tracks.like(token.accessToken, "67890");
-
-// Search
-const results = await sc.search.tracks(token.accessToken, "electronic");
-const users = await sc.search.users(token.accessToken, "artist name");
-
-// Playlists
-const playlist = await sc.playlists.getPlaylist(token.accessToken, "111");
-
-// Resolve
-const resolved = await sc.resolve.resolveUrl(token.accessToken, "https://soundcloud.com/...");
+// Search tracks
+const results = await client.search.tracks(token.access_token, "ambient");
 ```
 
 ### Standalone functions
 
-```ts
-import { GetSCMe, SearchTracks, GetSCClientToken } from "@tsd/soundcloud";
+Every method is also available as a standalone function:
 
-const token = await GetSCClientToken("clientId", "clientSecret");
-const me = await GetSCMe(token.accessToken);
-const tracks = await SearchTracks(token.accessToken, "electronic");
+```typescript
+import { GetSCClientToken, GetSCMe, searchTracks } from "soundcloud-api-client";
+
+const token = await GetSCClientToken("CLIENT_ID", "CLIENT_SECRET");
+const me = await GetSCMe(token.access_token);
+const tracks = await searchTracks(token.access_token, "lofi");
 ```
 
-### Types only
+## Types
 
-```ts
-import type { SCApiTrack, SCUser, Track, Token } from "@tsd/soundcloud/types";
-```
+All SoundCloud API response types are exported:
 
-### Mappers only
-
-```ts
-import { SCApiTrackToTSDTrack, SCApiUserToTSDUser } from "@tsd/soundcloud/mappers";
+```typescript
+import type {
+  SoundCloudUser,
+  SoundCloudTrack,
+  SoundCloudPlaylist,
+  SoundCloudComment,
+  SoundCloudToken,
+  PaginatedResponse,
+} from "soundcloud-api-client";
 ```
 
 ## API Coverage
 
-All 24 SoundCloud API endpoints:
-
-| Category | Methods |
-|----------|---------|
-| **Auth** | `getClientToken`, `getUserToken`, `refreshUserToken` |
-| **Users** | `getMe`, `getUser`, `getFollowers`, `getFollowings`, `getTracks`, `getPlaylists`, `getLikesTracks`, `getLikesPlaylists` |
-| **Tracks** | `getTrack`, `getComments`, `getLikes`, `getReposts`, `getRelated`, `like` |
-| **Playlists** | `getPlaylist`, `getTracks`, `getReposts` |
-| **Search** | `tracks`, `users`, `playlists` |
-| **Resolve** | `resolveUrl` |
-
-## Utils
-
-```ts
-import { getSCWidgetUrl, FormatDate, GetTags } from "@tsd/soundcloud";
-```
+- **Auth**: Client credentials, authorization code, refresh token
+- **Users**: Profile, followers, followings, tracks, playlists, likes
+- **Tracks**: Get, comments, likes, reposts, related, like
+- **Playlists**: Get, tracks, reposts
+- **Search**: Tracks, users, playlists
+- **Resolve**: URL resolution
+- **Utils**: Widget URL helper
 
 ## License
 

@@ -1,11 +1,6 @@
-import { scFetchAndMap } from "../client/http.js";
-import { SCApiPlaylistToTSDPlaylist } from "../mappers/playlist.js";
-import type { SCApiPlaylist } from "../types/api.js";
-import type { Playlist } from "../types/models.js";
+import { scFetch } from "../client/http.js";
+import type { SoundCloudPlaylist } from "../types/api.js";
 
-export const GetSCPlaylistWithId = (token: string, playlistId: string): Promise<Playlist> => {
-  return scFetchAndMap<Playlist, SCApiPlaylist>(
-    { path: `/playlists/${playlistId}`, method: "GET", token },
-    SCApiPlaylistToTSDPlaylist
-  );
+export const getPlaylist = (token: string, playlistId: string | number): Promise<SoundCloudPlaylist> => {
+  return scFetch<SoundCloudPlaylist>({ path: `/playlists/${playlistId}`, method: "GET", token });
 };
