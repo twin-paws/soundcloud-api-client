@@ -1,6 +1,6 @@
 {
   "name": "soundcloud-api-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A TypeScript client for the SoundCloud API",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/twin-paws/soundcloud-api-client.git"
+    "url": "https://github.com/twin-paws/soundcloud-api-ts.git"
   },
   "keywords": ["soundcloud", "api", "client", "typescript", "oauth2"],
   "license": "MIT",
