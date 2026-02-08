@@ -26,8 +26,8 @@ sc.setToken(token.access_token);
 // Now all calls use the stored token automatically
 const results = await sc.search.tracks("electronic");
 const me = await sc.me.getMe();
-const track = await sc.tracks.getTrack(undefined, 123456);
-const streams = await sc.tracks.getStreams(undefined, 123456);
+const track = await sc.tracks.getTrack(123456);
+const streams = await sc.tracks.getStreams(123456);
 ```
 
 ## OAuth 2.0 Flow
@@ -64,7 +64,7 @@ const me = await sc.me.getMe();
 const tracks = await sc.search.tracks("lofi beats");
 
 // 5. Override token per-call if needed
-const otherMe = await sc.me.getMe("other-users-token");
+const otherMe = await sc.me.getMe({ token: "other-users-token" });
 
 // 6. Refresh manually if needed
 const refreshed = await sc.auth.refreshUserToken(token.refresh_token);
@@ -77,7 +77,7 @@ sc.clearToken();
 
 ## Client Class
 
-The `SoundCloudClient` class organizes all endpoints into namespaces. Token is optional on every method when `setToken()` has been called.
+The `SoundCloudClient` class organizes all endpoints into namespaces. Token is resolved automatically when `setToken()` has been called. Override per-call via `{ token: "..." }` options object.
 
 ```ts
 const sc = new SoundCloudClient({ clientId, clientSecret, redirectUri });
@@ -95,74 +95,76 @@ sc.auth.getUserToken(code, codeVerifier?)
 sc.auth.refreshUserToken(refreshToken)
 sc.auth.signOut(accessToken)
 
-// Me (authenticated user) — token optional if stored
-sc.me.getMe(token?)
-sc.me.getActivities(token?, limit?)
-sc.me.getActivitiesOwn(token?, limit?)
-sc.me.getActivitiesTracks(token?, limit?)
-sc.me.getLikesTracks(token?, limit?)
-sc.me.getLikesPlaylists(token?, limit?)
-sc.me.getFollowings(token?, limit?)
-sc.me.getFollowingsTracks(token?, limit?)
-sc.me.follow(token?, userUrn)
-sc.me.unfollow(token?, userUrn)
-sc.me.getFollowers(token?, limit?)
-sc.me.getPlaylists(token?, limit?)
-sc.me.getTracks(token?, limit?)
+// Me (authenticated user) — primary params first, options last
+sc.me.getMe(options?)
+sc.me.getActivities(limit?, options?)
+sc.me.getActivitiesOwn(limit?, options?)
+sc.me.getActivitiesTracks(limit?, options?)
+sc.me.getLikesTracks(limit?, options?)
+sc.me.getLikesPlaylists(limit?, options?)
+sc.me.getFollowings(limit?, options?)
+sc.me.getFollowingsTracks(limit?, options?)
+sc.me.follow(userUrn, options?)
+sc.me.unfollow(userUrn, options?)
+sc.me.getFollowers(limit?, options?)
+sc.me.getPlaylists(limit?, options?)
+sc.me.getTracks(limit?, options?)
 
 // Users
-sc.users.getUser(token?, userId)
-sc.users.getFollowers(token?, userId, limit?)
-sc.users.getFollowings(token?, userId, limit?)
-sc.users.getTracks(token?, userId, limit?)
-sc.users.getPlaylists(token?, userId, limit?)
-sc.users.getLikesTracks(token?, userId, limit?, cursor?)
-sc.users.getLikesPlaylists(token?, userId, limit?)
-sc.users.getWebProfiles(token?, userId)
+sc.users.getUser(userId, options?)
+sc.users.getFollowers(userId, limit?, options?)
+sc.users.getFollowings(userId, limit?, options?)
+sc.users.getTracks(userId, limit?, options?)
+sc.users.getPlaylists(userId, limit?, options?)
+sc.users.getLikesTracks(userId, limit?, cursor?, options?)
+sc.users.getLikesPlaylists(userId, limit?, options?)
+sc.users.getWebProfiles(userId, options?)
 
 // Tracks
-sc.tracks.getTrack(token?, trackId)
-sc.tracks.getStreams(token?, trackId)
-sc.tracks.getComments(token?, trackId, limit?)
-sc.tracks.createComment(token?, trackId, body, timestamp?)
-sc.tracks.getLikes(token?, trackId, limit?)
-sc.tracks.getReposts(token?, trackId, limit?)
-sc.tracks.getRelated(token?, trackId, limit?)
-sc.tracks.update(token?, trackId, params)
-sc.tracks.delete(token?, trackId)
+sc.tracks.getTrack(trackId, options?)
+sc.tracks.getStreams(trackId, options?)
+sc.tracks.getComments(trackId, limit?, options?)
+sc.tracks.createComment(trackId, body, timestamp?, options?)
+sc.tracks.getLikes(trackId, limit?, options?)
+sc.tracks.getReposts(trackId, limit?, options?)
+sc.tracks.getRelated(trackId, limit?, options?)
+sc.tracks.update(trackId, params, options?)
+sc.tracks.delete(trackId, options?)
 
 // Playlists
-sc.playlists.getPlaylist(token?, playlistId)
-sc.playlists.getTracks(token?, playlistId, limit?, offset?)
-sc.playlists.getReposts(token?, playlistId, limit?)
-sc.playlists.create(token?, params)
-sc.playlists.update(token?, playlistId, params)
-sc.playlists.delete(token?, playlistId)
+sc.playlists.getPlaylist(playlistId, options?)
+sc.playlists.getTracks(playlistId, limit?, offset?, options?)
+sc.playlists.getReposts(playlistId, limit?, options?)
+sc.playlists.create(params, options?)
+sc.playlists.update(playlistId, params, options?)
+sc.playlists.delete(playlistId, options?)
 
 // Likes
-sc.likes.likeTrack(token?, trackId)
-sc.likes.unlikeTrack(token?, trackId)
-sc.likes.likePlaylist(token?, playlistId)
-sc.likes.unlikePlaylist(token?, playlistId)
+sc.likes.likeTrack(trackId, options?)
+sc.likes.unlikeTrack(trackId, options?)
+sc.likes.likePlaylist(playlistId, options?)
+sc.likes.unlikePlaylist(playlistId, options?)
 
 // Reposts
-sc.reposts.repostTrack(token?, trackId)
-sc.reposts.unrepostTrack(token?, trackId)
-sc.reposts.repostPlaylist(token?, playlistId)
-sc.reposts.unrepostPlaylist(token?, playlistId)
+sc.reposts.repostTrack(trackId, options?)
+sc.reposts.unrepostTrack(trackId, options?)
+sc.reposts.repostPlaylist(playlistId, options?)
+sc.reposts.unrepostPlaylist(playlistId, options?)
 
-// Search — query as first arg when token stored
-sc.search.tracks(query, pageNumber?)
-sc.search.users(query, pageNumber?)
-sc.search.playlists(query, pageNumber?)
+// Search
+sc.search.tracks(query, pageNumber?, options?)
+sc.search.users(query, pageNumber?, options?)
+sc.search.playlists(query, pageNumber?, options?)
 
 // Resolve
-sc.resolve.resolveUrl(url)
+sc.resolve.resolveUrl(url, options?)
 ```
+
+Where `options` is `{ token?: string }` — only needed to override the stored token.
 
 ## Standalone Functions
 
-Every endpoint is also available as a standalone function:
+Every endpoint is also available as a standalone function (token is always required):
 
 ```ts
 import {
@@ -196,6 +198,7 @@ import type {
   SoundCloudActivity,
   SoundCloudActivitiesResponse,
   SoundCloudPaginatedResponse,
+  TokenOption,
 } from "soundcloud-api-client/types";
 ```
 

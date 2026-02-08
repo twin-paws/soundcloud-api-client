@@ -87,7 +87,7 @@ const me = await client.me.getMe();
 const tracks = await client.search.tracks("electronic");
 ```
 
-Methods should still accept an optional token override for cases where you need to act on behalf of different users.
+Methods should still accept an optional token override via an options object as the last parameter, e.g. `sc.me.getMe({ token: "other-token" })`.
 
 ### 🟡 4. No automatic token refresh
 
