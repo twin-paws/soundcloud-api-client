@@ -2,9 +2,33 @@
 
 [![npm version](https://img.shields.io/npm/v/soundcloud-api-ts)](https://www.npmjs.com/package/soundcloud-api-ts)
 [![npm downloads](https://img.shields.io/npm/dm/soundcloud-api-ts)](https://www.npmjs.com/package/soundcloud-api-ts)
-[![license](https://img.shields.io/npm/l/soundcloud-api-ts)](https://github.com/twin-paws/soundcloud-api-client/blob/main/LICENSE)
+[![CI](https://github.com/twin-paws/soundcloud-api-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/twin-paws/soundcloud-api-ts/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/soundcloud-api-ts)](https://github.com/twin-paws/soundcloud-api-ts/blob/main/LICENSE)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/soundcloud-api-ts)](https://bundlephobia.com/package/soundcloud-api-ts)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
+[![coverage](https://img.shields.io/badge/coverage-67%25-yellow.svg)]()
 
-A TypeScript client for the SoundCloud API. Zero dependencies, uses native `fetch` (Node 18+).
+A TypeScript client for the SoundCloud API. Zero dependencies, uses native `fetch`.
+
+## Why soundcloud-api-ts?
+
+- **Zero dependencies** — uses native `fetch`, nothing to install
+- **Full TypeScript types** for all API responses
+- **Token management built-in** — `setToken()`, auto-refresh on 401
+- **PKCE support** for public clients and SPAs
+- **Clean API** — `sc.tracks.getTrack(id)` not `getTrack(token, id)`
+- **Dual ESM/CJS output** — works everywhere
+
+## Comparison
+
+| Feature | soundcloud-api-ts | soundcloud.ts | node-soundcloud |
+| --- | --- | --- | --- |
+| TypeScript | ✅ Native | ✅ | ❌ |
+| Dependencies | 0 | varies | varies |
+| OAuth 2.0 | ✅ Full | Partial | Partial |
+| Auto token refresh | ✅ | ❌ | ❌ |
+| PKCE | ✅ | ❌ | ❌ |
+| Maintained | ✅ 2026 | — | — |
 
 ## Install
 
@@ -245,9 +269,13 @@ const widgetUrl = getSoundCloudWidgetUrl(trackId);
 
 ## Requirements
 
-- Node.js 18+ (uses native `fetch`)
+- Node.js 20+ (uses native `fetch`)
 - SoundCloud API credentials
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
-MIT
+[MIT](LICENSE) © Twin Paws
