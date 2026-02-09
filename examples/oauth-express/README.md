@@ -1,6 +1,6 @@
-# OAuth 2.0 Express Example
+# OAuth 2.1 Express Example
 
-A minimal Express server that demonstrates the SoundCloud OAuth 2.0 authorization code flow.
+A minimal Express server that demonstrates the SoundCloud OAuth 2.1 authorization code flow.
 
 ## Setup
 

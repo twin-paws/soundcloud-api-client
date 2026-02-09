@@ -1,5 +1,5 @@
 /**
- * Minimal Express server demonstrating the SoundCloud OAuth 2.0
+ * Minimal Express server demonstrating the SoundCloud OAuth 2.1
  * authorization code flow.
  *
  * Setup:

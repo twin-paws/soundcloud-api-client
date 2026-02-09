@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Package description updated to highlight zero deps, native fetch, OAuth 2.0 + PKCE
+- Package description updated to highlight zero deps, native fetch, OAuth 2.1 + PKCE
 - Package `homepage` set to TypeDoc site
 - README: added docs badge, coverage badge (94%), changelog section, documentation link
 
@@ -147,7 +147,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `SoundCloudClient` class with namespace-based API (`client.tracks.getTrack()`)
 - 24+ API endpoints: Auth, Me, Users, Tracks, Playlists, Likes, Reposts, Search, Resolve
-- OAuth 2.0: `client_credentials`, `authorization_code`, `refresh_token` grants
+- OAuth 2.1: `client_credentials`, `authorization_code`, `refresh_token` grants
 - PKCE support for public clients and SPAs
 - Automatic token refresh on 401 via `onTokenRefresh` callback
 - Per-call token override via `{ token }` options object

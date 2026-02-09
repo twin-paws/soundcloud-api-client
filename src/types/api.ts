@@ -1,10 +1,10 @@
 /**
- * OAuth 2.0 token response returned by SoundCloud's `/oauth2/token` endpoint.
+ * OAuth 2.1 token response returned by SoundCloud's `/oauth2/token` endpoint.
  *
  * @see https://developers.soundcloud.com/docs/api/explorer/open-api#/oauth2/post_oauth2_token
  */
 export interface SoundCloudToken {
-  /** The OAuth 2.0 access token used to authenticate API requests */
+  /** The OAuth 2.1 access token used to authenticate API requests */
   access_token: string;
   /** Number of seconds until the access token expires */
   expires_in: number;
