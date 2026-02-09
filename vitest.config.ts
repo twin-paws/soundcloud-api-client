@@ -6,7 +6,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov', 'json-summary'],
       include: ['src/**/*.ts'],
-      exclude: ['src/__tests__/**', '**/index.ts'],
+      exclude: ['src/__tests__/**', '**/index.ts', 'src/cli.ts', 'src/types/**'],
     },
   },
 });

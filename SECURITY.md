@@ -13,7 +13,9 @@ Only the current major version receives security updates.
 
 **Please do NOT open a public GitHub issue for security vulnerabilities.**
 
-Instead, email **twinpawsai@icloud.com** with the following details:
+Instead, use [GitHub's private vulnerability reporting](https://github.com/twin-paws/soundcloud-api-ts/security/advisories/new) to submit a report directly through the repository. This keeps the discussion private until a fix is available.
+
+Please include:
 
 - Description of the vulnerability
 - Steps to reproduce
