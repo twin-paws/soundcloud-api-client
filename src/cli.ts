@@ -37,7 +37,7 @@ interface CLIConfig {
   refreshToken?: string;
 }
 
-const CONFIG_PATH = path.join(os.homedir(), ".soundcloud-cli.json");
+const CONFIG_PATH = path.join(os.homedir(), ".sc-cli.json");
 
 function loadConfig(): CLIConfig {
   try {
@@ -111,7 +111,7 @@ function die(msg: string): never {
 
 function getClient(config: CLIConfig): SoundCloudClient {
   if (!config.clientId || !config.clientSecret) {
-    die("Not configured. Run `soundcloud-cli auth` first.");
+    die("Not configured. Run `sc-cli auth` first.");
   }
   const client = new SoundCloudClient({
     clientId: config.clientId,
@@ -195,7 +195,7 @@ async function cmdAuth(): Promise<void> {
 async function cmdLogin(): Promise<void> {
   const config = loadConfig();
   if (!config.clientId || !config.clientSecret) {
-    die("Not configured. Run `soundcloud-cli auth` first.");
+    die("Not configured. Run `sc-cli auth` first.");
   }
 
   const verifier = generateCodeVerifier();
@@ -264,17 +264,17 @@ async function cmdLogin(): Promise<void> {
 async function cmdSearch(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli search <query> [--json]
+${col(c.bold, "Usage:")} sc-cli search <query> [--json]
 
 ${col(c.bold, "Examples:")}
-  soundcloud-cli search "lofi hip hop"
-  soundcloud-cli search deadmau5 --json
+  sc-cli search "lofi hip hop"
+  sc-cli search deadmau5 --json
 `);
     return;
   }
 
   const query = args.positional.join(" ");
-  if (!query) die("Usage: soundcloud-cli search <query>");
+  if (!query) die("Usage: sc-cli search <query>");
 
   const config = loadConfig();
   const client = getClient(config);
@@ -314,17 +314,17 @@ ${col(c.bold, "Examples:")}
 async function cmdTrack(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli track <id> [--json]
+${col(c.bold, "Usage:")} sc-cli track <id> [--json]
 
 ${col(c.bold, "Examples:")}
-  soundcloud-cli track 123456
-  soundcloud-cli track 123456 --json
+  sc-cli track 123456
+  sc-cli track 123456 --json
 `);
     return;
   }
 
   const id = args.positional[0];
-  if (!id) die("Usage: soundcloud-cli track <id>");
+  if (!id) die("Usage: sc-cli track <id>");
 
   const config = loadConfig();
   const client = getClient(config);
@@ -354,16 +354,16 @@ ${col(c.bold, "Examples:")}
 async function cmdUser(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli user <id> [--json]
+${col(c.bold, "Usage:")} sc-cli user <id> [--json]
 
 ${col(c.bold, "Examples:")}
-  soundcloud-cli user 123456
+  sc-cli user 123456
 `);
     return;
   }
 
   const id = args.positional[0];
-  if (!id) die("Usage: soundcloud-cli user <id>");
+  if (!id) die("Usage: sc-cli user <id>");
 
   const config = loadConfig();
   const client = getClient(config);
@@ -391,16 +391,16 @@ ${col(c.bold, "Examples:")}
 async function cmdPlaylist(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli playlist <id> [--json]
+${col(c.bold, "Usage:")} sc-cli playlist <id> [--json]
 
 ${col(c.bold, "Examples:")}
-  soundcloud-cli playlist 123456
+  sc-cli playlist 123456
 `);
     return;
   }
 
   const id = args.positional[0];
-  if (!id) die("Usage: soundcloud-cli playlist <id>");
+  if (!id) die("Usage: sc-cli playlist <id>");
 
   const config = loadConfig();
   const client = getClient(config);
@@ -437,16 +437,16 @@ ${col(c.bold, "Examples:")}
 async function cmdStream(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli stream <id> [--json]
+${col(c.bold, "Usage:")} sc-cli stream <id> [--json]
 
 ${col(c.bold, "Examples:")}
-  soundcloud-cli stream 123456
+  sc-cli stream 123456
 `);
     return;
   }
 
   const id = args.positional[0];
-  if (!id) die("Usage: soundcloud-cli stream <id>");
+  if (!id) die("Usage: sc-cli stream <id>");
 
   const config = loadConfig();
   const client = getClient(config);
@@ -477,16 +477,16 @@ ${col(c.bold, "Examples:")}
 async function cmdResolve(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli resolve <url> [--json]
+${col(c.bold, "Usage:")} sc-cli resolve <url> [--json]
 
 ${col(c.bold, "Examples:")}
-  soundcloud-cli resolve https://soundcloud.com/artist/track
+  sc-cli resolve https://soundcloud.com/artist/track
 `);
     return;
   }
 
   const url = args.positional[0];
-  if (!url) die("Usage: soundcloud-cli resolve <url>");
+  if (!url) die("Usage: sc-cli resolve <url>");
 
   const config = loadConfig();
   const client = getClient(config);
@@ -513,9 +513,9 @@ ${col(c.bold, "Examples:")}
 async function cmdMe(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli me [--json]
+${col(c.bold, "Usage:")} sc-cli me [--json]
 
-Shows the authenticated user's profile. Requires \`soundcloud-cli login\` first.
+Shows the authenticated user's profile. Requires \`sc-cli login\` first.
 `);
     return;
   }
@@ -523,7 +523,7 @@ Shows the authenticated user's profile. Requires \`soundcloud-cli login\` first.
   const config = loadConfig();
   const client = getClient(config);
   if (!client.accessToken) {
-    die("Not logged in. Run `soundcloud-cli login` first.");
+    die("Not logged in. Run `sc-cli login` first.");
   }
 
   const spinner = createSpinner("Fetching profile…");
@@ -549,9 +549,9 @@ Shows the authenticated user's profile. Requires \`soundcloud-cli login\` first.
 async function cmdLikes(args: ParsedArgs): Promise<void> {
   if (args.flags["help"]) {
     console.log(`
-${col(c.bold, "Usage:")} soundcloud-cli likes [--json]
+${col(c.bold, "Usage:")} sc-cli likes [--json]
 
-Shows your liked tracks. Requires \`soundcloud-cli login\` first.
+Shows your liked tracks. Requires \`sc-cli login\` first.
 `);
     return;
   }
@@ -559,7 +559,7 @@ Shows your liked tracks. Requires \`soundcloud-cli login\` first.
   const config = loadConfig();
   const client = getClient(config);
   if (!client.accessToken) {
-    die("Not logged in. Run `soundcloud-cli login` first.");
+    die("Not logged in. Run `sc-cli login` first.");
   }
 
   const spinner = createSpinner("Fetching likes…");
@@ -594,9 +594,9 @@ Shows your liked tracks. Requires \`soundcloud-cli login\` first.
 
 function showHelp(): void {
   console.log(`
-${col(c.bold + c.cyan, "⚡ soundcloud-cli")} ${col(c.dim, "— Explore the SoundCloud API from your terminal")}
+${col(c.bold + c.cyan, "⚡ sc-cli")} ${col(c.dim, "— Explore the SoundCloud API from your terminal")}
 
-${col(c.bold, "Usage:")} soundcloud-cli <command> [options]
+${col(c.bold, "Usage:")} sc-cli <command> [options]
 
 ${col(c.bold, "Setup:")}
   ${col(c.green, "auth")}              Set up API credentials (client_id + client_secret)
@@ -617,12 +617,12 @@ ${col(c.bold, "Options:")}
   ${col(c.yellow, "--help")}            Show help for a command
 
 ${col(c.bold, "Examples:")}
-  ${col(c.dim, "$")} soundcloud-cli auth
-  ${col(c.dim, "$")} soundcloud-cli search "lofi beats"
-  ${col(c.dim, "$")} soundcloud-cli track 293 --json
-  ${col(c.dim, "$")} soundcloud-cli resolve https://soundcloud.com/artist/track
-  ${col(c.dim, "$")} soundcloud-cli login
-  ${col(c.dim, "$")} soundcloud-cli me
+  ${col(c.dim, "$")} sc-cli auth
+  ${col(c.dim, "$")} sc-cli search "lofi beats"
+  ${col(c.dim, "$")} sc-cli track 293 --json
+  ${col(c.dim, "$")} sc-cli resolve https://soundcloud.com/artist/track
+  ${col(c.dim, "$")} sc-cli login
+  ${col(c.dim, "$")} sc-cli me
 
 ${col(c.dim, "Config:")} ${CONFIG_PATH}
 ${col(c.dim, "Powered by")} soundcloud-api-ts

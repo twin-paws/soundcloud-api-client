@@ -17,7 +17,7 @@ A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, nativ
 - **Full TypeScript types** for all API responses
 - **Token management built-in** — `setToken()`, auto-refresh on 401
 - **PKCE support** for public clients and SPAs
-- **Interactive CLI** — explore the API from your terminal with `soundcloud-cli`
+- **Interactive CLI** — explore the API from your terminal with `sc-cli`
 - **Clean API** — `sc.tracks.getTrack(id)` not `getTrack(token, id)`
 - **Automatic retry** — exponential backoff on 429 and 5xx
 - **Dual ESM/CJS output** — works everywhere
@@ -49,36 +49,36 @@ Explore the SoundCloud API right from your terminal — no code required:
 npm install -g soundcloud-api-ts
 
 # Set up credentials (interactive)
-soundcloud-cli auth
+sc-cli auth
 
 # Search tracks — colorful formatted table
-soundcloud-cli search "lofi beats"
+sc-cli search "lofi beats"
 
 # Get track details
-soundcloud-cli track 293
+sc-cli track 293
 
 # View user profile
-soundcloud-cli user 12345
+sc-cli user 12345
 
 # Get stream URLs
-soundcloud-cli stream 293
+sc-cli stream 293
 
 # Show playlist with track listing
-soundcloud-cli playlist 456
+sc-cli playlist 456
 
 # Resolve a SoundCloud URL
-soundcloud-cli resolve https://soundcloud.com/artist/track
+sc-cli resolve https://soundcloud.com/artist/track
 
 # OAuth login for authenticated endpoints
-soundcloud-cli login
-soundcloud-cli me
-soundcloud-cli likes
+sc-cli login
+sc-cli me
+sc-cli likes
 ```
 
-Every command supports `--json` for machine-readable output (great for piping to `jq` or using in scripts). Run `soundcloud-cli --help` for the full command list.
+Every command supports `--json` for machine-readable output (great for piping to `jq` or using in scripts). Run `sc-cli --help` for the full command list.
 
 ```
-⚡ soundcloud-cli — Explore the SoundCloud API from your terminal
+⚡ sc-cli — Explore the SoundCloud API from your terminal
 
 Commands: auth, login, search, track, user, playlist, stream, resolve, me, likes
 Options:  --json (raw JSON output), --help (per-command help)
