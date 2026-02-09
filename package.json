@@ -17,23 +17,34 @@
       "require": "./dist/types/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/twin-paws/soundcloud-api-ts.git"
   },
-  "keywords": ["soundcloud", "api", "client", "typescript", "oauth2"],
+  "keywords": [
+    "soundcloud",
+    "api",
+    "client",
+    "typescript",
+    "oauth2"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
+    "tsup": "^8.0.0",
     "typescript": "^5.3.0",
-    "tsup": "^8.0.0"
+    "vitest": "^4.0.18"
   }
 }
