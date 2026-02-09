@@ -37,6 +37,34 @@ A TypeScript client for the SoundCloud API. Zero dependencies, uses native `fetc
 npm install soundcloud-api-ts
 ```
 
+## CLI
+
+Explore the SoundCloud API right from your terminal — no code required:
+
+```bash
+# Install globally
+npm install -g soundcloud-api-ts
+
+# Set up credentials
+soundcloud-cli auth
+
+# Search tracks
+soundcloud-cli search "lofi beats"
+
+# Get track details
+soundcloud-cli track 293
+
+# View user profile
+soundcloud-cli user 12345
+
+# OAuth login for authenticated endpoints
+soundcloud-cli login
+soundcloud-cli me
+soundcloud-cli likes
+```
+
+All commands support `--json` for machine-readable output. Run `soundcloud-cli --help` for the full command list.
+
 ## Quick Start
 
 ```ts

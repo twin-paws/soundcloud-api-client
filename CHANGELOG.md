@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-02-09
+
+### Added
+
+- **`soundcloud-cli`** — interactive CLI tool to explore the SoundCloud API from your terminal
+  - `auth` — interactive credential setup, saves to `~/.soundcloud-cli.json`
+  - `login` — OAuth browser flow with PKCE (starts local callback server)
+  - `search <query>` — search tracks with formatted table output
+  - `track <id>` — show track details (title, artist, duration, plays, likes, genre)
+  - `user <id>` — show user profile (username, followers, tracks count, city)
+  - `playlist <id>` — show playlist with track listing
+  - `stream <id>` — get stream URLs for a track
+  - `resolve <url>` — resolve a SoundCloud URL
+  - `me` / `likes` — authenticated user commands
+  - `--json` flag on all commands for machine-readable output
+  - Colorful ANSI output with animated spinner, zero external dependencies
+
 ## [1.5.0] - 2026-02-08
 
 ### Added
@@ -131,6 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zero runtime dependencies — native `fetch`
 - SoundCloud widget URL utility
 
+[1.6.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.3...v1.5.0
 [1.4.3]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.2...v1.4.3
 [1.4.2]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.1...v1.4.2
