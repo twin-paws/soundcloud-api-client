@@ -1,5 +1,7 @@
 import { vi } from "vitest";
 
+import type { Mock } from "vitest";
+
 export function mockFetch(response: {
   status?: number;
   statusText?: string;
@@ -22,10 +24,10 @@ export function mockFetch(response: {
   });
 
   globalThis.fetch = fn as unknown as typeof fetch;
-  return fn;
+  return fn as Mock;
 }
 
-export function mockFetchSequence(responses: Array<Parameters<typeof mockFetch>[0]>) {
+export function mockFetchSequence(responses: Array<Parameters<typeof mockFetch>[0]>): Mock {
   let callIndex = 0;
   const fn = vi.fn().mockImplementation(() => {
     const r = responses[callIndex++] ?? responses[responses.length - 1];
