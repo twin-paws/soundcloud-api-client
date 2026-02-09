@@ -68,4 +68,15 @@ describe("auth", () => {
     expect(fn.mock.calls[0][1].method).toBe("POST");
     expect(JSON.parse(fn.mock.calls[0][1].body)).toEqual({ access_token: "tok123" });
   });
+
+  it("signOut throws on non-ok response", async () => {
+    mockFetch({ status: 500, statusText: "Internal Server Error", ok: false });
+    const client = new SoundCloudClient(config);
+    await expect(client.auth.signOut("tok123")).rejects.toThrow("Sign-out failed: 500");
+  });
+
+  it("getAuthorizationUrl throws without redirectUri", () => {
+    const client = new SoundCloudClient({ clientId: "cid", clientSecret: "cs" });
+    expect(() => client.auth.getAuthorizationUrl()).toThrow("redirectUri is required");
+  });
 });

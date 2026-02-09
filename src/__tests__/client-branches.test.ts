@@ -172,4 +172,18 @@ describe("client limit branches", () => {
     await client.search.playlists("test");
     expect(fn.mock.calls[0][0]).not.toContain("offset=");
   });
+
+  it("tracks.createComment with timestamp", async () => {
+    const fn = mockFetch({ json: { id: 1, body: "nice" } });
+    await client.tracks.createComment(123, "nice", 5000);
+    const body = JSON.parse(fn.mock.calls[0][1].body);
+    expect(body.comment.timestamp).toBe(5000);
+  });
+
+  it("tracks.createComment without timestamp", async () => {
+    const fn = mockFetch({ json: { id: 1, body: "nice" } });
+    await client.tracks.createComment(123, "nice");
+    const body = JSON.parse(fn.mock.calls[0][1].body);
+    expect(body.comment.timestamp).toBeUndefined();
+  });
 });

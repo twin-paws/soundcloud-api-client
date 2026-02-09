@@ -3,6 +3,21 @@ import { scFetch, scFetchUrl } from "../client/http.js";
 import { SoundCloudError } from "../errors.js";
 import { mockFetch, mockFetchSequence } from "./helpers.js";
 
+/* Helper: mock fetch where response.json() throws */
+function mockFetchJsonThrows(overrides: { status?: number; statusText?: string; ok?: boolean } = {}) {
+  const status = overrides.status ?? 400;
+  const ok = overrides.ok ?? false;
+  const fn = vi.fn().mockResolvedValue({
+    status,
+    statusText: overrides.statusText ?? "Bad Request",
+    ok,
+    json: vi.fn().mockRejectedValue(new Error("invalid json")),
+    headers: { get: () => null },
+  });
+  globalThis.fetch = fn as unknown as typeof fetch;
+  return fn;
+}
+
 beforeEach(() => { vi.restoreAllMocks(); });
 
 describe("scFetch", () => {
@@ -58,6 +73,13 @@ describe("scFetch", () => {
     expect(result).toBe("https://example.com/resolved");
   });
 
+  it("handles 302 without location header", async () => {
+    mockFetch({ status: 302, ok: false });
+    await expect(
+      scFetch({ path: "/test", method: "GET", token: "tok" }, { getToken: () => "tok", setToken: () => {}, retry: { maxRetries: 0, retryBaseDelay: 0 } }),
+    ).rejects.toThrow(SoundCloudError);
+  });
+
   it("throws SoundCloudError on non-ok response", async () => {
     mockFetch({ status: 404, statusText: "Not Found", ok: false });
     await expect(
@@ -75,6 +97,15 @@ describe("scFetchUrl", () => {
     const result = await scFetchUrl("https://api.soundcloud.com/me/tracks?linked_partitioning=true", "tok");
     expect(result).toEqual({ collection: [], next_href: null });
     expect(fn.mock.calls[0][0]).toBe("https://api.soundcloud.com/me/tracks?linked_partitioning=true");
+  });
+
+  it("falls back to exponential backoff when retry-after is NaN", async () => {
+    mockFetchSequence([
+      { status: 429, statusText: "Too Many Requests", ok: false, json: { error: "rate limit" }, headers: { "retry-after": "not-a-number" } },
+      { status: 200, json: { ok: true } },
+    ]);
+    const result = await scFetchUrl("https://api.soundcloud.com/test", "tok", { maxRetries: 1, retryBaseDelay: 1 });
+    expect(result).toEqual({ ok: true });
   });
 
   it("throws SoundCloudError after retries exhausted on 429", async () => {
@@ -101,5 +132,64 @@ describe("scFetchUrl", () => {
     const fn = mockFetch({ json: { id: 1 } });
     await scFetchUrl("https://api.soundcloud.com/test");
     expect(fn.mock.calls[0][1].headers.Authorization).toBeUndefined();
+  });
+
+  it("returns redirect location on 302", async () => {
+    mockFetch({ status: 302, headers: { location: "https://cdn.example.com/file" }, ok: false });
+    const result = await scFetchUrl("https://api.soundcloud.com/resolve?url=x", "tok");
+    expect(result).toBe("https://cdn.example.com/file");
+  });
+
+  it("handles 302 without location header", async () => {
+    mockFetch({ status: 302, ok: false });
+    await expect(
+      scFetchUrl("https://api.soundcloud.com/test", "tok", { maxRetries: 0, retryBaseDelay: 0 }),
+    ).rejects.toThrow(SoundCloudError);
+  });
+
+  it("returns undefined on 204", async () => {
+    mockFetch({ status: 204, statusText: "No Content" });
+    const result = await scFetchUrl("https://api.soundcloud.com/test", "tok");
+    expect(result).toBeUndefined();
+  });
+
+  it("throws SoundCloudError on non-retryable error", async () => {
+    mockFetch({ status: 403, statusText: "Forbidden", ok: false, json: { error: "forbidden" } });
+    await expect(
+      scFetchUrl("https://api.soundcloud.com/test", "tok", { maxRetries: 0, retryBaseDelay: 0 }),
+    ).rejects.toThrow(SoundCloudError);
+  });
+});
+
+describe("parseErrorBody catch branch", () => {
+  it("returns undefined in error body when response.json() throws", async () => {
+    mockFetchJsonThrows({ status: 403, statusText: "Forbidden" });
+    const err = await scFetch(
+      { path: "/bad", method: "GET", token: "tok" },
+      { getToken: () => "tok", setToken: () => {}, retry: { maxRetries: 0, retryBaseDelay: 0 } },
+    ).catch((e: SoundCloudError) => e);
+    expect(err).toBeInstanceOf(SoundCloudError);
+    expect(err.status).toBe(403);
+    expect(err.body).toBeUndefined();
+  });
+});
+
+describe("scFetch body handling", () => {
+  it("passes FormData body without Content-Type header", async () => {
+    const fn = mockFetch({ json: { ok: true } });
+    const formData = new FormData();
+    formData.append("file", "data");
+    await scFetch({ path: "/test", method: "POST", token: "tok", body: formData as unknown as Record<string, unknown> });
+    const call = fn.mock.calls[0][1];
+    expect(call.body).toBeInstanceOf(FormData);
+    expect(call.headers["Content-Type"]).toBeUndefined();
+  });
+
+  it("sets Content-Type from contentType option without body", async () => {
+    const fn = mockFetch({ json: { ok: true } });
+    await scFetch({ path: "/test", method: "POST", token: "tok", contentType: "text/plain" });
+    const call = fn.mock.calls[0][1];
+    expect(call.headers["Content-Type"]).toBe("text/plain");
+    expect(call.body).toBeUndefined();
   });
 });

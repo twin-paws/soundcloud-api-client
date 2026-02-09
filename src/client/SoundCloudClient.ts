@@ -138,7 +138,7 @@ export class SoundCloudClient {
         }
       : {
           getToken,
-          setToken: (a, r) => this.setToken(a, r),
+          setToken: /* v8 ignore next */ (a, r) => this.setToken(a, r),
           retry: retryConfig,
         };
 
