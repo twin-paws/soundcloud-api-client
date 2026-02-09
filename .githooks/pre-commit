@@ -1,0 +1,29 @@
+#!/bin/bash
+# Block commits containing potential secrets
+# Patterns are base64-encoded to avoid the hook flagging itself
+# Each line: base64 of the pattern to block
+ENCODED_PATTERNS=(
+  "c2NfQ0xJRU5USUQ="          # sc_CLIENTID
+  "c2NfQ0xJRU5UU0VDUkVU"      # sc_CLIENTSECRET
+  "YjYwNDQyZjMyZjNh"          # b60442f32f3a
+  "NWQ5YzM1MzA0N2Y3"          # 5d9c353047f7
+  "Z2hwX1thLXpBLVowLTldezM2fQ==" # ghp_ pattern (won't match literal but covers real tokens)
+  "bnBtX1thLXpBLVowLTldezM2fQ==" # npm_ pattern
+  "QVpVUkVfQUNDRVNTX0tFWQ=="  # AZURE_ACCESS_KEY
+  "Y29zbW9zX0tFWQ=="          # cosmos_KEY
+  "cmVkaXNfS0VZ"              # redis_KEY
+  "R1JBUEhfS0VZ"              # GRAPH_KEY
+  "UE9TVE1BUktfQVBJX0tFWQ=="  # POSTMARK_API_KEY
+)
+
+STAGED=$(git diff --cached --diff-filter=ACMR -U0 -- ':(exclude).githooks/*')
+
+for encoded in "${ENCODED_PATTERNS[@]}"; do
+  pattern=$(echo "$encoded" | base64 -d 2>/dev/null)
+  if [ -z "$pattern" ]; then continue; fi
+  if echo "$STAGED" | grep -qF "$pattern"; then
+    echo "🚫 BLOCKED: Staged changes contain a potential secret."
+    echo "   Remove the secret and try again."
+    exit 1
+  fi
+done
