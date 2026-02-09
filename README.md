@@ -1,13 +1,16 @@
 # soundcloud-api-ts
 
 [![npm version](https://img.shields.io/npm/v/soundcloud-api-ts)](https://www.npmjs.com/package/soundcloud-api-ts)
-[![npm downloads](https://img.shields.io/npm/dm/soundcloud-api-ts)](https://www.npmjs.com/package/soundcloud-api-ts)
+[![npm downloads](https://img.shields.io/npm/dw/soundcloud-api-ts)](https://www.npmjs.com/package/soundcloud-api-ts)
 [![CI](https://github.com/twin-paws/soundcloud-api-ts/actions/workflows/ci.yml/badge.svg)](https://github.com/twin-paws/soundcloud-api-ts/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/soundcloud-api-ts)](https://github.com/twin-paws/soundcloud-api-ts/blob/main/LICENSE)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/soundcloud-api-ts)](https://bundlephobia.com/package/soundcloud-api-ts)
+[![install size](https://packagephobia.com/badge?p=soundcloud-api-ts)](https://packagephobia.com/result?p=soundcloud-api-ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-blue.svg)](https://www.typescriptlang.org/)
+[![Node](https://img.shields.io/badge/Node.js-≥20-339933.svg)](https://nodejs.org/)
 [![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)]()
 [![docs](https://img.shields.io/badge/docs-TypeDoc-blue.svg)](https://twin-paws.github.io/soundcloud-api-ts/)
+[![GitHub stars](https://img.shields.io/github/stars/twin-paws/soundcloud-api-ts)](https://github.com/twin-paws/soundcloud-api-ts)
 
 A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, native `fetch`, built-in OAuth 2.1 + PKCE, automatic retry, and an interactive CLI.
 
@@ -29,6 +32,7 @@ A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, nativ
 | --- | --- | --- | --- |
 | TypeScript | ✅ Native | ✅ | ✅ |
 | Dependencies | **0** | 1 | 3 (lodash, cookie, undici) |
+| Install size | **972 KB** | 372 KB | **7.9 MB** |
 | Auth method | **Official OAuth 2.1** | ⚠️ Scrape client ID from browser | ⚠️ Scrape client ID from browser |
 | PKCE support | ✅ | ❌ | ❌ |
 | Auto token refresh | ✅ on 401 | ❌ | ❌ |
