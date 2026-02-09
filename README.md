@@ -304,20 +304,25 @@ try {
   await sc.tracks.getTrack(999);
 } catch (err) {
   if (err instanceof SoundCloudError) {
-    console.log(err.status);           // 404
-    console.log(err.statusText);       // "Not Found"
-    console.log(err.error);            // "not_found"
-    console.log(err.errorDescription); // "Track not found"
-    console.log(err.body);             // full response body
+    console.log(err.status);     // 404
+    console.log(err.statusText); // "Not Found"
+    console.log(err.message);    // "404 - Not Found" (from SC's response)
+    console.log(err.errorCode);  // "invalid_client" (on auth errors)
+    console.log(err.errors);     // ["404 - Not Found"] (individual error messages)
+    console.log(err.docsLink);   // "https://developers.soundcloud.com/docs/api/explorer/open-api"
+    console.log(err.body);       // full parsed response body
 
     // Convenience getters
-    if (err.isNotFound) { /* ... */ }
-    if (err.isRateLimited) { /* ... */ }
-    if (err.isUnauthorized) { /* ... */ }
-    if (err.isForbidden) { /* ... */ }
+    if (err.isNotFound) { /* handle 404 */ }
+    if (err.isRateLimited) { /* handle 429 */ }
+    if (err.isUnauthorized) { /* handle 401 */ }
+    if (err.isForbidden) { /* handle 403 */ }
+    if (err.isServerError) { /* handle 5xx */ }
   }
 }
 ```
+
+Error messages are parsed directly from SoundCloud's API response format, giving you the most useful message available.
 
 ## Rate Limiting & Retries
 

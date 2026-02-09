@@ -151,7 +151,7 @@ describe("gives up after maxRetries", () => {
     } catch (err) {
       expect(err).toBeInstanceOf(SoundCloudError);
       expect((err as SoundCloudError).status).toBe(502);
-      expect((err as SoundCloudError).error).toBe("bad_gateway");
+      expect((err as SoundCloudError).message).toBe("bad_gateway");
     }
     expect(fn).toHaveBeenCalledTimes(2);
   });

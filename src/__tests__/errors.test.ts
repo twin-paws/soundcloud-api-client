@@ -8,17 +8,74 @@ beforeEach(() => {
 });
 
 describe("SoundCloudError", () => {
-  it("has correct properties", () => {
+  it("parses real SC error response format", () => {
     const err = new SoundCloudError(401, "Unauthorized", {
-      error: "401 - Unauthorized",
-      error_description: "Token is invalid",
+      code: 401,
+      message: "invalid_client",
+      link: "https://developers.soundcloud.com/docs/api/explorer/open-api",
+      status: "401 - Unauthorized",
+      errors: [{ error_message: "invalid_client" }],
+      error: null,
+      error_code: "invalid_client",
     });
     expect(err.status).toBe(401);
     expect(err.statusText).toBe("Unauthorized");
-    expect(err.error).toBe("401 - Unauthorized");
-    expect(err.errorDescription).toBe("Token is invalid");
+    expect(err.message).toBe("invalid_client");
+    expect(err.errorCode).toBe("invalid_client");
+    expect(err.docsLink).toBe("https://developers.soundcloud.com/docs/api/explorer/open-api");
+    expect(err.errors).toEqual(["invalid_client"]);
     expect(err.name).toBe("SoundCloudError");
-    expect(err.message).toBe("Token is invalid");
+  });
+
+  it("handles SC 404 response format", () => {
+    const err = new SoundCloudError(404, "Not Found", {
+      code: 404,
+      message: "404 - Not Found",
+      link: "https://developers.soundcloud.com/docs/api/explorer/open-api",
+      status: "404 - Not Found",
+      errors: [{ error_message: "404 - Not Found" }],
+      error: null,
+    });
+    expect(err.message).toBe("404 - Not Found");
+    expect(err.isNotFound).toBe(true);
+    expect(err.errors).toEqual(["404 - Not Found"]);
+  });
+
+  it("handles OAuth error_description (token endpoint errors)", () => {
+    const err = new SoundCloudError(400, "Bad Request", {
+      error_description: "Missing parameter: grant_type",
+    });
+    expect(err.message).toBe("Missing parameter: grant_type");
+  });
+
+  it("falls back to error_code", () => {
+    const err = new SoundCloudError(400, "Bad Request", {
+      error_code: "invalid_grant",
+    });
+    expect(err.message).toBe("invalid_grant");
+    expect(err.errorCode).toBe("invalid_grant");
+  });
+
+  it("falls back to errors array", () => {
+    const err = new SoundCloudError(422, "Unprocessable", {
+      errors: [{ error_message: "title is required" }],
+    });
+    expect(err.message).toBe("title is required");
+    expect(err.errors).toEqual(["title is required"]);
+  });
+
+  it("falls back to status text when body has no useful message", () => {
+    const err = new SoundCloudError(500, "Internal Server Error");
+    expect(err.message).toBe("500 Internal Server Error");
+  });
+
+  it("falls back when body has empty message", () => {
+    const err = new SoundCloudError(401, "Unauthorized", {
+      code: 401,
+      message: "",
+      error: null,
+    });
+    expect(err.message).toBe("401 Unauthorized");
   });
 
   it("isUnauthorized", () => {
@@ -38,40 +95,32 @@ describe("SoundCloudError", () => {
     expect(new SoundCloudError(429, "Too Many Requests").isRateLimited).toBe(true);
   });
 
-  it("uses error_description for message when available", () => {
-    const err = new SoundCloudError(400, "Bad Request", {
-      error: "bad_request",
-      error_description: "Missing parameter",
-    });
-    expect(err.message).toBe("Missing parameter");
+  it("isServerError", () => {
+    expect(new SoundCloudError(500, "Internal Server Error").isServerError).toBe(true);
+    expect(new SoundCloudError(502, "Bad Gateway").isServerError).toBe(true);
+    expect(new SoundCloudError(400, "Bad Request").isServerError).toBe(false);
   });
 
-  it("falls back to error field for message", () => {
-    const err = new SoundCloudError(400, "Bad Request", {
-      error: "bad_request",
-    });
-    expect(err.message).toBe("bad_request");
-  });
-
-  it("falls back to status text for message", () => {
-    const err = new SoundCloudError(400, "Bad Request");
-    expect(err.message).toBe("400 Bad Request");
-  });
-
-  it("stores body", () => {
-    const body = { error: "x", errors: [{ detail: "y" }] };
-    const err = new SoundCloudError(422, "Unprocessable", body);
+  it("stores full body", () => {
+    const body = { code: 401, message: "test", errors: [{ error_message: "test" }] };
+    const err = new SoundCloudError(401, "Unauthorized", body);
     expect(err.body).toEqual(body);
   });
 });
 
 describe("scFetch throws SoundCloudError", () => {
-  it("throws SoundCloudError with parsed body on error response", async () => {
+  it("throws SoundCloudError with parsed SC response body", async () => {
     mockFetch({
       status: 404,
       statusText: "Not Found",
       ok: false,
-      json: { error: "not_found", error_description: "Track not found" },
+      json: {
+        code: 404,
+        message: "404 - Not Found",
+        status: "404 - Not Found",
+        errors: [{ error_message: "404 - Not Found" }],
+        error: null,
+      },
     });
     try {
       await scFetch(
@@ -83,8 +132,9 @@ describe("scFetch throws SoundCloudError", () => {
       expect(err).toBeInstanceOf(SoundCloudError);
       const e = err as SoundCloudError;
       expect(e.status).toBe(404);
-      expect(e.errorDescription).toBe("Track not found");
+      expect(e.message).toBe("404 - Not Found");
       expect(e.isNotFound).toBe(true);
+      expect(e.errors).toEqual(["404 - Not Found"]);
     }
   });
 });
