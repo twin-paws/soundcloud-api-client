@@ -37,9 +37,17 @@
   "keywords": [
     "soundcloud",
     "api",
-    "client",
     "typescript",
-    "oauth2"
+    "oauth2",
+    "music",
+    "streaming",
+    "audio",
+    "sdk",
+    "client",
+    "rest-api",
+    "soundcloud-api",
+    "pkce",
+    "node"
   ],
   "license": "MIT",
   "engines": {

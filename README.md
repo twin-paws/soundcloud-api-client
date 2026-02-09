@@ -354,6 +354,10 @@ Full API documentation is available at **[twin-paws.github.io/soundcloud-api-ts]
 - Node.js 20+ (uses native `fetch`)
 - SoundCloud API credentials
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
