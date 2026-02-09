@@ -9,7 +9,7 @@
 [![coverage](https://img.shields.io/badge/coverage-94%25-brightgreen.svg)]()
 [![docs](https://img.shields.io/badge/docs-TypeDoc-blue.svg)](https://twin-paws.github.io/soundcloud-api-ts/)
 
-A TypeScript client for the SoundCloud API. Zero dependencies, uses native `fetch`.
+A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, native `fetch`, built-in OAuth 2.0 + PKCE, automatic retry, and an interactive CLI.
 
 ## Why soundcloud-api-ts?
 
@@ -17,8 +17,11 @@ A TypeScript client for the SoundCloud API. Zero dependencies, uses native `fetc
 - **Full TypeScript types** for all API responses
 - **Token management built-in** — `setToken()`, auto-refresh on 401
 - **PKCE support** for public clients and SPAs
+- **Interactive CLI** — explore the API from your terminal with `soundcloud-cli`
 - **Clean API** — `sc.tracks.getTrack(id)` not `getTrack(token, id)`
+- **Automatic retry** — exponential backoff on 429 and 5xx
 - **Dual ESM/CJS output** — works everywhere
+- **LLM-friendly** — includes `llms.txt` and `AGENTS.md` for AI coding agents
 
 ## Comparison
 
@@ -45,10 +48,10 @@ Explore the SoundCloud API right from your terminal — no code required:
 # Install globally
 npm install -g soundcloud-api-ts
 
-# Set up credentials
+# Set up credentials (interactive)
 soundcloud-cli auth
 
-# Search tracks
+# Search tracks — colorful formatted table
 soundcloud-cli search "lofi beats"
 
 # Get track details
@@ -57,13 +60,29 @@ soundcloud-cli track 293
 # View user profile
 soundcloud-cli user 12345
 
+# Get stream URLs
+soundcloud-cli stream 293
+
+# Show playlist with track listing
+soundcloud-cli playlist 456
+
+# Resolve a SoundCloud URL
+soundcloud-cli resolve https://soundcloud.com/artist/track
+
 # OAuth login for authenticated endpoints
 soundcloud-cli login
 soundcloud-cli me
 soundcloud-cli likes
 ```
 
-All commands support `--json` for machine-readable output. Run `soundcloud-cli --help` for the full command list.
+Every command supports `--json` for machine-readable output (great for piping to `jq` or using in scripts). Run `soundcloud-cli --help` for the full command list.
+
+```
+⚡ soundcloud-cli — Explore the SoundCloud API from your terminal
+
+Commands: auth, login, search, track, user, playlist, stream, resolve, me, likes
+Options:  --json (raw JSON output), --help (per-command help)
+```
 
 ## Quick Start
 
@@ -372,6 +391,14 @@ const sc = new SoundCloudClient({
 - **4xx errors** (except 429) are NOT retried — they throw immediately
 - **401 errors** trigger `onTokenRefresh` (if configured) instead of retry
 - Backoff formula: `baseDelay × 2^attempt` with jitter
+
+## AI / LLM Integration
+
+This package is designed to be easily used by AI coding agents:
+
+- **[`llms.txt`](llms.txt)** — Complete method reference in plain text, optimized for LLM consumption
+- **[`AGENTS.md`](AGENTS.md)** — Setup guide, common patterns, and gotchas for AI agents
+- **Full JSDoc** with `@example` on every export — works great with GitHub Copilot, Cursor, etc.
 
 ## Documentation
 
