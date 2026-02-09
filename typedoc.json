@@ -1,0 +1,16 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "soundcloud-api-ts",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs-site",
+  "readme": "README.md",
+  "theme": "default",
+  "includeVersion": true,
+  "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/test/**", "**/tests/**"],
+  "excludeInternal": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  },
+  "searchInComments": true
+}
