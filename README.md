@@ -9,7 +9,7 @@
 [![coverage](https://img.shields.io/badge/coverage-94%25-brightgreen.svg)]()
 [![docs](https://img.shields.io/badge/docs-TypeDoc-blue.svg)](https://twin-paws.github.io/soundcloud-api-ts/)
 
-A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, native `fetch`, built-in OAuth 2.0 + PKCE, automatic retry, and an interactive CLI.
+A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, native `fetch`, built-in OAuth 2.1 + PKCE, automatic retry, and an interactive CLI.
 
 ## Why soundcloud-api-ts?
 
@@ -29,7 +29,7 @@ A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, nativ
 | --- | --- | --- | --- |
 | TypeScript | ✅ Native | ✅ | ✅ |
 | Dependencies | **0** | 1 | 3 (lodash, cookie, undici) |
-| Auth method | **Official OAuth 2.0** | ⚠️ Scrape client ID from browser | ⚠️ Scrape client ID from browser |
+| Auth method | **Official OAuth 2.1** | ⚠️ Scrape client ID from browser | ⚠️ Scrape client ID from browser |
 | PKCE support | ✅ | ❌ | ❌ |
 | Auto token refresh | ✅ on 401 | ❌ | ❌ |
 | Auto retry (429/5xx) | ✅ exponential backoff | ❌ | ❌ |
@@ -117,7 +117,7 @@ const track = await sc.tracks.getTrack(123456);
 const streams = await sc.tracks.getStreams(123456);
 ```
 
-## OAuth 2.0 Flow
+## OAuth 2.1 Flow
 
 ```ts
 import { SoundCloudClient, generateCodeVerifier, generateCodeChallenge } from "soundcloud-api-ts";

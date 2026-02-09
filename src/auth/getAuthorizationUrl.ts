@@ -1,5 +1,5 @@
 /**
- * Build the SoundCloud authorization URL for the OAuth 2.0 code flow.
+ * Build the SoundCloud authorization URL for the OAuth 2.1 code flow.
  *
  * Redirect the user to this URL so they can grant access to your application.
  *
