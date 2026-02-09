@@ -5,61 +5,139 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] - 2026-02-08
 
 ### Added
 
-- `SoundCloudError` class with structured error properties (`status`, `statusText`, `error`, `errorDescription`, `body`) and convenience getters (`isUnauthorized`, `isForbidden`, `isNotFound`, `isRateLimited`)
-- Automatic retry with exponential backoff on 429 (Too Many Requests) and 5xx server errors
-- `maxRetries`, `retryBaseDelay`, and `onDebug` options on `SoundCloudClientConfig`
-- `Retry-After` header support for 429 responses
-- Error handling and retry test suites
-- Pagination helpers: `paginate()`, `paginateItems()`, and `fetchAll()` for automatic `next_href` traversal
-- `scFetchUrl()` for fetching absolute URLs (used internally for pagination)
-- `SoundCloudClient.paginate()`, `.paginateItems()`, and `.fetchAll()` instance methods
-- Pagination tests
+- Examples folder with 4 demos: basic usage, Express OAuth flow, pagination, PKCE
+- `llms.txt` — full method reference for AI/LLM consumption
+- `AGENTS.md` — instructions for AI coding agents using the package
+- `SECURITY.md` — vulnerability reporting policy
+- TypeDoc site with auto-deploy to GitHub Pages
+- npm keywords (13) and GitHub topics (12) for discoverability
 
 ### Changed
 
-- API errors now throw `SoundCloudError` instead of plain `Error` (breaking for `instanceof` checks on `Error` message strings)
+- Package description updated to highlight zero deps, native fetch, OAuth 2.0 + PKCE
+- Package `homepage` set to TypeDoc site
+- README: added docs badge, coverage badge (94%), changelog section, documentation link
+
+## [1.4.3] - 2026-02-08
+
+### Added
+
+- 63 new tests (249 total) covering optional parameter branches, client methods, and retry-exhaustion paths
+- Excluded barrel `index.ts` files from coverage reporting
+
+### Changed
+
+- Branch coverage: 67% → 94.49%
+- Statement coverage: 94.7% → 96%
+
+## [1.4.2] - 2026-02-08
+
+### Added
+
+- `@example` blocks on 12 previously undocumented functions
+
+### Fixed
+
+- Package name in all JSDoc example imports (`tsd-soundcloud` → `soundcloud-api-ts`)
+
+## [1.4.1] - 2026-02-08
+
+### Fixed
+
+- Removed unused `scFetchUrl` import from `paginate.ts`
+- Replaced `as any` casts with `as SoundCloudErrorBody` in `http.ts`
+- Removed unnecessary eslint-disable directive in `SoundCloudClient.ts`
+
+## [1.4.0] - 2026-02-08
+
+### Added
+
+- Comprehensive JSDoc on every public export — `@param`, `@returns`, `@throws`, `@example`, `@see`
+- 2,200+ lines of documentation added
+- Standalone function test suite (94.7% statement coverage)
+
+## [1.3.0] - 2026-02-08
+
+### Added
+
+- `SoundCloudError` class with structured error properties (`status`, `statusText`, `errorCode`, `docsLink`, `errors[]`, `body`)
+- Convenience getters: `isUnauthorized`, `isForbidden`, `isNotFound`, `isRateLimited`, `isServerError`
+- Automatic retry with exponential backoff on 429 and 5xx responses
+- `Retry-After` header support for 429 responses
+- `onDebug` callback for debug logging
+- Pagination helpers: `paginate()`, `paginateItems()`, `fetchAll()` with async iterators
+- `scFetchUrl()` for fetching absolute URLs (used for pagination)
+- `SoundCloudClient.paginate()`, `.paginateItems()`, `.fetchAll()` instance methods
+
+### Changed
+
+- API errors now throw `SoundCloudError` instead of plain `Error`
+- Error responses parsed from SoundCloud's actual format (`message`, `error_code`, `errors[]`)
+
+## [1.2.0] - 2026-02-08
+
+### Added
+
+- LICENSE file (MIT)
+- CHANGELOG.md
+- CONTRIBUTING.md
+- Code coverage reporting (`@vitest/coverage-v8`)
+- GitHub topics for discoverability
+- README: badges, comparison table, "Why this package?" section
+
+### Changed
+
+- CI: added lint step
 
 ## [1.1.0] - 2026-02-08
 
 ### Added
 
-- Comprehensive test suite with Vitest
+- Test suite with 72 unit tests and integration tests (Vitest)
 - CI/CD pipeline with GitHub Actions (Node 20, 22)
+- Auto-publish to npm on GitHub release
 - ESLint configuration with TypeScript support
-- Pre-commit hooks via `.githooks/`
-- Code coverage with `@vitest/coverage-v8`
-- CONTRIBUTING.md, CHANGELOG.md, and LICENSE files
+- Pre-commit hooks for secret scanning
+- `.env.example` template
 
 ### Changed
 
-- Minimum Node.js version bumped to 20+
+- Minimum Node.js version bumped to 20+ (dropped Node 18)
 
 ## [1.0.1] - 2026-02-07
 
 ### Changed
 
 - Updated README with npm package name (`soundcloud-api-ts`) and badges
+- Updated repo references from `tsd-soundcloud` to `soundcloud-api-ts`
 
 ## [1.0.0] - 2026-02-07
 
 ### Added
 
-- `SoundCloudClient` class with namespace-based API design
-- 24+ API endpoints across Auth, Me, Users, Tracks, Playlists, Likes, Reposts, Search, and Resolve
-- OAuth 2.0 support: `client_credentials`, `authorization_code`, and `refresh_token` grant types
-- PKCE (Proof Key for Code Exchange) support for public clients
-- Automatic token refresh on 401 responses via `onTokenRefresh` callback
-- Per-call token override via `{ token: "..." }` options
+- `SoundCloudClient` class with namespace-based API (`client.tracks.getTrack()`)
+- 24+ API endpoints: Auth, Me, Users, Tracks, Playlists, Likes, Reposts, Search, Resolve
+- OAuth 2.0: `client_credentials`, `authorization_code`, `refresh_token` grants
+- PKCE support for public clients and SPAs
+- Automatic token refresh on 401 via `onTokenRefresh` callback
+- Per-call token override via `{ token }` options object
 - Standalone function exports for all endpoints
 - Full TypeScript types for all API responses
 - Dual ESM/CJS output via tsup
-- Zero runtime dependencies — uses native `fetch`
+- Zero runtime dependencies — native `fetch`
 - SoundCloud widget URL utility
 
+[1.5.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.3...v1.5.0
+[1.4.3]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.2...v1.4.3
+[1.4.2]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.1...v1.4.2
+[1.4.1]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/twin-paws/soundcloud-api-ts/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/twin-paws/soundcloud-api-ts/releases/tag/v1.0.0
