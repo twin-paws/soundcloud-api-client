@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { scFetch } from "../client/http.js";
+import { SoundCloudError } from "../errors.js";
 import { mockFetch } from "./helpers.js";
 
 beforeEach(() => { vi.restoreAllMocks(); });
@@ -57,9 +58,13 @@ describe("scFetch", () => {
     expect(result).toBe("https://example.com/resolved");
   });
 
-  it("throws on non-ok response", async () => {
+  it("throws SoundCloudError on non-ok response", async () => {
     mockFetch({ status: 404, statusText: "Not Found", ok: false });
-    await expect(scFetch({ path: "/bad", method: "GET", token: "tok" }))
-      .rejects.toThrow("SoundCloud API error: 404 Not Found");
+    await expect(
+      scFetch(
+        { path: "/bad", method: "GET", token: "tok" },
+        { getToken: () => "tok", setToken: () => {}, retry: { maxRetries: 0, retryBaseDelay: 0 } },
+      ),
+    ).rejects.toThrow(SoundCloudError);
   });
 });

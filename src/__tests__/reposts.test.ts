@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { SoundCloudClient } from "../client/SoundCloudClient.js";
 import { mockFetch } from "./helpers.js";
 
-const config = { clientId: "cid", clientSecret: "cs" };
+const config = { clientId: "cid", clientSecret: "cs", maxRetries: 0 };
 let client: SoundCloudClient;
 
 beforeEach(() => {

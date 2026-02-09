@@ -1,3 +1,5 @@
+export { SoundCloudError } from "../errors.js";
+
 export type {
   SoundCloudToken,
   SoundCloudUser,

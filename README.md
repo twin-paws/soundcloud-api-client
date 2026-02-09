@@ -293,6 +293,52 @@ import { getSoundCloudWidgetUrl } from "soundcloud-api-ts";
 const widgetUrl = getSoundCloudWidgetUrl(trackId);
 ```
 
+## Error Handling
+
+All API errors throw a `SoundCloudError` with structured properties:
+
+```ts
+import { SoundCloudError } from "soundcloud-api-ts";
+
+try {
+  await sc.tracks.getTrack(999);
+} catch (err) {
+  if (err instanceof SoundCloudError) {
+    console.log(err.status);           // 404
+    console.log(err.statusText);       // "Not Found"
+    console.log(err.error);            // "not_found"
+    console.log(err.errorDescription); // "Track not found"
+    console.log(err.body);             // full response body
+
+    // Convenience getters
+    if (err.isNotFound) { /* ... */ }
+    if (err.isRateLimited) { /* ... */ }
+    if (err.isUnauthorized) { /* ... */ }
+    if (err.isForbidden) { /* ... */ }
+  }
+}
+```
+
+## Rate Limiting & Retries
+
+The client automatically retries on **429 Too Many Requests** and **5xx Server Errors** with exponential backoff:
+
+```ts
+const sc = new SoundCloudClient({
+  clientId: "...",
+  clientSecret: "...",
+  maxRetries: 3,         // default: 3
+  retryBaseDelay: 1000,  // default: 1000ms
+  onDebug: (msg) => console.log(msg), // optional retry logging
+});
+```
+
+- **429 responses** respect the `Retry-After` header when present
+- **5xx responses** (500, 502, 503, 504) are retried with exponential backoff
+- **4xx errors** (except 429) are NOT retried — they throw immediately
+- **401 errors** trigger `onTokenRefresh` (if configured) instead of retry
+- Backoff formula: `baseDelay × 2^attempt` with jitter
+
 ## Requirements
 
 - Node.js 20+ (uses native `fetch`)

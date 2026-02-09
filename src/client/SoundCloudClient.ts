@@ -1,4 +1,4 @@
-import { scFetch, scFetchUrl, type AutoRefreshContext } from "./http.js";
+import { scFetch, scFetchUrl, type AutoRefreshContext, type RetryConfig } from "./http.js";
 import { paginate, paginateItems, fetchAll } from "./paginate.js";
 import type {
   SoundCloudToken,
@@ -22,6 +22,12 @@ export interface SoundCloudClientConfig {
   redirectUri?: string;
   /** Called automatically when a request returns 401. Return new tokens to retry. */
   onTokenRefresh?: (client: SoundCloudClient) => Promise<SoundCloudToken>;
+  /** Max retries on 429/5xx (default: 3) */
+  maxRetries?: number;
+  /** Base delay in ms for exponential backoff (default: 1000) */
+  retryBaseDelay?: number;
+  /** Optional debug logger for retry attempts, etc. */
+  onDebug?: (message: string) => void;
 }
 
 /** Optional token override, passed as the last parameter to client methods. */
@@ -56,7 +62,12 @@ export class SoundCloudClient {
   constructor(config: SoundCloudClientConfig) {
     this.config = config;
     const getToken: TokenGetter = () => this._accessToken;
-    const refreshCtx: AutoRefreshContext | undefined = config.onTokenRefresh
+    const retryConfig: RetryConfig = {
+      maxRetries: config.maxRetries ?? 3,
+      retryBaseDelay: config.retryBaseDelay ?? 1000,
+      onDebug: config.onDebug,
+    };
+    const refreshCtx: AutoRefreshContext = config.onTokenRefresh
       ? {
           getToken,
           onTokenRefresh: async () => {
@@ -64,18 +75,23 @@ export class SoundCloudClient {
             return result;
           },
           setToken: (a, r) => this.setToken(a, r),
+          retry: retryConfig,
         }
-      : undefined;
+      : {
+          getToken,
+          setToken: (a, r) => this.setToken(a, r),
+          retry: retryConfig,
+        };
 
     this.auth = new SoundCloudClient.Auth(this.config);
-    this.me = new SoundCloudClient.Me(getToken, refreshCtx);
-    this.users = new SoundCloudClient.Users(getToken, refreshCtx);
-    this.tracks = new SoundCloudClient.Tracks(getToken, refreshCtx);
-    this.playlists = new SoundCloudClient.Playlists(getToken, refreshCtx);
-    this.search = new SoundCloudClient.Search(getToken, refreshCtx);
-    this.resolve = new SoundCloudClient.Resolve(getToken, refreshCtx);
-    this.likes = new SoundCloudClient.Likes(getToken, refreshCtx);
-    this.reposts = new SoundCloudClient.Reposts(getToken, refreshCtx);
+    this.me = new SoundCloudClient.Me(getToken, refreshCtx!);
+    this.users = new SoundCloudClient.Users(getToken, refreshCtx!);
+    this.tracks = new SoundCloudClient.Tracks(getToken, refreshCtx!);
+    this.playlists = new SoundCloudClient.Playlists(getToken, refreshCtx!);
+    this.search = new SoundCloudClient.Search(getToken, refreshCtx!);
+    this.resolve = new SoundCloudClient.Resolve(getToken, refreshCtx!);
+    this.likes = new SoundCloudClient.Likes(getToken, refreshCtx!);
+    this.reposts = new SoundCloudClient.Reposts(getToken, refreshCtx!);
   }
 
   /** Store an access token (and optionally refresh token) on this client instance. */

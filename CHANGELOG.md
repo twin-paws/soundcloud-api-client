@@ -9,10 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `SoundCloudError` class with structured error properties (`status`, `statusText`, `error`, `errorDescription`, `body`) and convenience getters (`isUnauthorized`, `isForbidden`, `isNotFound`, `isRateLimited`)
+- Automatic retry with exponential backoff on 429 (Too Many Requests) and 5xx server errors
+- `maxRetries`, `retryBaseDelay`, and `onDebug` options on `SoundCloudClientConfig`
+- `Retry-After` header support for 429 responses
+- Error handling and retry test suites
 - Pagination helpers: `paginate()`, `paginateItems()`, and `fetchAll()` for automatic `next_href` traversal
 - `scFetchUrl()` for fetching absolute URLs (used internally for pagination)
 - `SoundCloudClient.paginate()`, `.paginateItems()`, and `.fetchAll()` instance methods
 - Pagination tests
+
+### Changed
+
+- API errors now throw `SoundCloudError` instead of plain `Error` (breaking for `instanceof` checks on `Error` message strings)
 
 ## [1.1.0] - 2026-02-08
 
