@@ -32,7 +32,7 @@ A fully-typed TypeScript client for the SoundCloud API. Zero dependencies, nativ
 | --- | --- | --- | --- |
 | TypeScript | ✅ Native | ✅ | ✅ |
 | Dependencies | **0** | 1 | 3 (lodash, cookie, undici) |
-| Install size | **972 KB** | 372 KB | **7.9 MB** |
+| Bundle size (min+gz) | **4.5 KB** | ❌ unbundlable (native binary) | 191 KB |
 | Auth method | **Official OAuth 2.1** | ⚠️ Scrape client ID from browser | ⚠️ Scrape client ID from browser |
 | PKCE support | ✅ | ❌ | ❌ |
 | Auto token refresh | ✅ on 401 | ❌ | ❌ |
