@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.5] - 2026-02-09
+
+### Fixed
+
+- Trusted Publishing: removed `registry-url` from setup-node (was injecting stale `.npmrc`), install npm@latest for OIDC support (requires npm ≥11.5.1)
+
 ## [1.8.4] - 2026-02-09
 
 ### Changed
