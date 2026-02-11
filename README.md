@@ -7,7 +7,7 @@
 [![bundle size](https://img.shields.io/bundlephobia/minzip/soundcloud-api-ts)](https://bundlephobia.com/package/soundcloud-api-ts)
 [![install size](https://packagephobia.com/badge?p=soundcloud-api-ts)](https://packagephobia.com/result?p=soundcloud-api-ts)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9+-blue.svg)](https://www.typescriptlang.org/)
-[![Node](https://img.shields.io/badge/Node.js-≥20-339933.svg)](https://nodejs.org/)
+[![Node](https://img.shields.io/badge/Node.js-≥22-339933.svg)](https://nodejs.org/)
 [![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)]()
 [![docs](https://img.shields.io/badge/docs-TypeDoc-blue.svg)](https://twin-paws.github.io/soundcloud-api-ts/)
 [![GitHub stars](https://img.shields.io/github/stars/twin-paws/soundcloud-api-ts)](https://github.com/twin-paws/soundcloud-api-ts)

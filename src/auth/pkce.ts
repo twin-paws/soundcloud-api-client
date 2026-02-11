@@ -1,7 +1,7 @@
 /**
  * Generate a random PKCE code verifier (43+ characters, base64url-encoded).
  *
- * Uses the Web Crypto API (`globalThis.crypto`), compatible with Node 18+ and modern browsers.
+ * Uses the Web Crypto API (`globalThis.crypto`), compatible with Node 20+ and modern browsers.
  *
  * @returns A cryptographically random code verifier string
  *
@@ -26,7 +26,7 @@ export function generateCodeVerifier(): string {
  * Derive the S256 PKCE code challenge from a code verifier.
  *
  * Computes `BASE64URL(SHA256(verifier))` using the Web Crypto API (SubtleCrypto),
- * available in Node 18+ and modern browsers.
+ * available in Node 20+ and modern browsers.
  *
  * @param verifier - The code verifier string (typically from {@link generateCodeVerifier})
  * @returns The base64url-encoded SHA-256 hash of the verifier
