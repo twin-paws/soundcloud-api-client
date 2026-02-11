@@ -456,6 +456,10 @@ Full API documentation is available at **[twin-paws.github.io/soundcloud-api-ts]
 
 See [CHANGELOG.md](CHANGELOG.md) for release history.
 
+## Related Packages
+
+- **[soundcloud-api-ts-next](https://github.com/twin-paws/soundcloud-api-ts-next)** — React hooks + Next.js API route handlers built on this package. Use it when building Next.js apps that need SoundCloud data with secrets kept server-side.
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
