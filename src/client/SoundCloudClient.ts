@@ -278,7 +278,7 @@ export namespace SoundCloudClient {
         params.set("code_challenge", options.codeChallenge);
         params.set("code_challenge_method", "S256");
       }
-      return `https://api.soundcloud.com/connect?${params}`;
+      return `https://secure.soundcloud.com/authorize?${params}`;
     }
 
     /**
@@ -297,7 +297,7 @@ export namespace SoundCloudClient {
      */
     async getClientToken(): Promise<SoundCloudToken> {
       return scFetch<SoundCloudToken>({
-        path: "/oauth2/token",
+        path: "/oauth/token",
         method: "POST",
         body: new URLSearchParams({
           grant_type: "client_credentials",
@@ -333,7 +333,7 @@ export namespace SoundCloudClient {
       };
       if (codeVerifier) params.code_verifier = codeVerifier;
       return scFetch<SoundCloudToken>({
-        path: "/oauth2/token",
+        path: "/oauth/token",
         method: "POST",
         body: new URLSearchParams(params),
       });
@@ -356,7 +356,7 @@ export namespace SoundCloudClient {
      */
     async refreshUserToken(refreshToken: string): Promise<SoundCloudToken> {
       return scFetch<SoundCloudToken>({
-        path: "/oauth2/token",
+        path: "/oauth/token",
         method: "POST",
         body: new URLSearchParams({
           grant_type: "refresh_token",

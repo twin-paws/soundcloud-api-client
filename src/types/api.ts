@@ -1,5 +1,5 @@
 /**
- * OAuth 2.1 token response returned by SoundCloud's `/oauth2/token` endpoint.
+ * OAuth 2.1 token response returned by SoundCloud's `/oauth/token` endpoint.
  *
  * @see https://developers.soundcloud.com/docs/api/explorer/open-api#/oauth2/post_oauth2_token
  */

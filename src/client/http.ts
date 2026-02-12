@@ -1,12 +1,13 @@
 import { SoundCloudError, type SoundCloudErrorBody } from "../errors.js";
 
 const BASE_URL = "https://api.soundcloud.com";
+const AUTH_BASE_URL = "https://secure.soundcloud.com";
 
 /**
  * Options for making a request to the SoundCloud API via {@link scFetch}.
  */
 export interface RequestOptions {
-  /** API path relative to `https://api.soundcloud.com` (e.g. "/tracks/123") */
+  /** API path relative to `https://api.soundcloud.com` (e.g. "/tracks/123"). Paths starting with `/oauth` are routed to `https://secure.soundcloud.com`. */
   path: string;
   /** HTTP method */
   method: "GET" | "POST" | "PUT" | "DELETE";
@@ -118,7 +119,8 @@ export async function scFetch<T>(
   const retryConfig = refreshCtx?.retry ?? DEFAULT_RETRY;
 
   const execute = async (tokenOverride?: string): Promise<T> => {
-    const url = `${BASE_URL}${options.path}`;
+    const isAuthPath = options.path.startsWith("/oauth");
+    const url = `${isAuthPath ? AUTH_BASE_URL : BASE_URL}${options.path}`;
     const headers: Record<string, string> = {
       Accept: "application/json",
     };

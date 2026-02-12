@@ -46,7 +46,7 @@ export const getUserToken = (
   };
   if (codeVerifier) params.code_verifier = codeVerifier;
   return scFetch<SoundCloudToken>({
-    path: "/oauth2/token",
+    path: "/oauth/token",
     method: "POST",
     body: new URLSearchParams(params),
   });

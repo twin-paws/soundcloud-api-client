@@ -40,10 +40,17 @@ describe("scFetch", () => {
     expect(call.headers["Content-Type"]).toBe("application/json");
   });
 
+  it("routes /oauth paths to secure.soundcloud.com", async () => {
+    const fn = mockFetch({ json: { ok: true } });
+    const params = new URLSearchParams({ grant_type: "client_credentials" });
+    await scFetch({ path: "/oauth/token", method: "POST", body: params });
+    expect(fn.mock.calls[0][0]).toBe("https://secure.soundcloud.com/oauth/token");
+  });
+
   it("makes POST with URLSearchParams", async () => {
     const fn = mockFetch({ json: { ok: true } });
     const params = new URLSearchParams({ grant_type: "client_credentials" });
-    await scFetch({ path: "/oauth2/token", method: "POST", body: params });
+    await scFetch({ path: "/oauth/token", method: "POST", body: params });
     const call = fn.mock.calls[0][1];
     expect(call.body).toBeInstanceOf(URLSearchParams);
     expect(call.headers["Content-Type"]).toBe("application/x-www-form-urlencoded");

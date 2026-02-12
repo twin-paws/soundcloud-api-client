@@ -40,5 +40,5 @@ export function getAuthorizationUrl(
     params.set("code_challenge", options.codeChallenge);
     params.set("code_challenge_method", "S256");
   }
-  return `https://api.soundcloud.com/connect?${params}`;
+  return `https://secure.soundcloud.com/authorize?${params}`;
 }

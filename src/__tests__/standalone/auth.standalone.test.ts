@@ -16,7 +16,7 @@ describe("getClientToken", () => {
     expect(token.access_token).toBe("tok");
     expect(fn).toHaveBeenCalledTimes(1);
     const url = fn.mock.calls[0][0] as string;
-    expect(url).toContain("/oauth2/token");
+    expect(url).toBe("https://secure.soundcloud.com/oauth/token");
   });
 });
 
@@ -51,6 +51,11 @@ describe("getAuthorizationUrl", () => {
     expect(url).toContain("client_id=cid");
     expect(url).toContain("redirect_uri=");
     expect(url).toContain("response_type=code");
+  });
+
+  it("uses secure.soundcloud.com for authorization", () => {
+    const url = getAuthorizationUrl("cid", "https://cb.com");
+    expect(url.startsWith("https://secure.soundcloud.com/authorize")).toBe(true);
   });
 
   it("includes state and codeChallenge", () => {

@@ -35,7 +35,7 @@ export const refreshUserToken = (
   refreshToken: string,
 ): Promise<SoundCloudToken> => {
   return scFetch<SoundCloudToken>({
-    path: "/oauth2/token",
+    path: "/oauth/token",
     method: "POST",
     body: new URLSearchParams({
       grant_type: "refresh_token",

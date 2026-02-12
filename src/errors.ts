@@ -34,7 +34,7 @@ export interface SoundCloudErrorBody {
   error?: string | null;
   /** Machine-readable error code (e.g. "invalid_client") */
   error_code?: string;
-  /** OAuth error description, present in `/oauth2/token` error responses */
+  /** OAuth error description, present in `/oauth/token` error responses */
   error_description?: string;
 }
 
