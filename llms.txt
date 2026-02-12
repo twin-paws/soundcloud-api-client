@@ -1,6 +1,6 @@
-# soundcloud-api-ts v1.9.2
+# soundcloud-api-ts v1.10.0
 
-> A TypeScript client for the SoundCloud API. Zero dependencies, native fetch, full OAuth 2.1 + PKCE support.
+> A TypeScript client for the SoundCloud API. Zero dependencies, native fetch, full OAuth 2.1 + PKCE support via `secure.soundcloud.com`.
 
 ## Installation
 

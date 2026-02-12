@@ -55,7 +55,7 @@ Unlike legacy JavaScript SoundCloud SDKs and community wrappers that require sep
 
 > **Why does auth method matter?** `soundcloud.ts` and `soundcloud-fetch` use SoundCloud's undocumented internal `api-v2` and require you to scrape your client ID from browser dev tools. This can break anytime SoundCloud changes their frontend, and may violate the [API Terms of Use](https://developers.soundcloud.com/docs/api/terms-of-use) which state *"you must register your app"* and *"any attempt to circumvent this and obtain a new client ID and Security Code is strictly prohibited."*
 >
-> `soundcloud-api-ts` uses the **official documented API** (`api.soundcloud.com`) with registered app credentials, OAuth 2.1 as specified by SoundCloud, PKCE for public clients, and automatic token refresh.
+> `soundcloud-api-ts` uses the **official documented API** (`api.soundcloud.com`) with registered app credentials, OAuth 2.1 via `secure.soundcloud.com` as specified by SoundCloud, PKCE for public clients, and automatic token refresh.
 
 **Coming from `soundcloud.ts`?** See the [Migration Guide](docs/MIGRATING.md) — most changes are find-and-replace.
 
@@ -427,7 +427,7 @@ const sc = new SoundCloudClient({
 
 This package is built on SoundCloud's **official documented API** (`api.soundcloud.com`) and follows the [API Terms of Use](https://developers.soundcloud.com/docs/api/terms-of-use):
 
-- ✅ Uses registered app credentials (client ID + client secret) via OAuth 2.1
+- ✅ Uses registered app credentials (client ID + client secret) via OAuth 2.1 on `secure.soundcloud.com`
 - ✅ No undocumented or internal API endpoints (`api-v2`)
 - ✅ No client ID scraping or credential circumvention
 - ✅ No content downloading, ripping, or stream capture

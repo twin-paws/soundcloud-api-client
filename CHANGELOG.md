@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-02-12
+
+### Changed
+
+- **OAuth 2.1 endpoint migration**: All auth calls now use SoundCloud's new `secure.soundcloud.com` endpoints
+  - Token: `api.soundcloud.com/oauth2/token` → `secure.soundcloud.com/oauth/token`
+  - Authorize: `api.soundcloud.com/connect` → `secure.soundcloud.com/authorize`
+  - Sign-out was already on `secure.soundcloud.com` (unchanged)
+- Auth paths (`/oauth/*`) are automatically routed to `secure.soundcloud.com` in the HTTP layer
+- API data calls (tracks, users, playlists, etc.) remain on `api.soundcloud.com`
+
+### Why
+
+SoundCloud is shutting down the legacy OAuth 2.0 endpoints. See the [migration announcement](https://developers.soundcloud.com/blog/oauth-migration). This is a **required upgrade** — the old endpoints will stop working.
+
 ## [1.9.0] - 2026-02-10
 
 ### Added
